@@ -14,13 +14,13 @@ while :
     while read initials && [ "$initials" != "q" ];
       do
         if [ -z "$initials" ]; then
-          printf '%s\n' "Error: Initials can't be empty" >&2
+          printf '%s\n' "Error: initials can't be empty" >&2
         elif [[ "${initials}" =~ [^a-zA-Z] ]]; then
-          printf '%s\n' "Error: Initials must only contain letters, a-z\n" >&2
+          printf '%s\n' "Error: initials must only contain letters, a-z" >&2
         elif [[ "${#initials}" < $MIN ]]; then
-          printf '%s\n' "Error: initials must be at least $MIN characters long\n" >&2
+          printf '%s\n' "Error: initials must be at least $MIN characters" >&2
         elif [[ "${#initials}" > $MAX ]]; then
-          printf '%s\n' "Error: initials must be no more than $MAX characters long\n" >&2
+          printf '%s\n' "Error: initials must be no more than $MAX characters" >&2
         else
           break
         fi
