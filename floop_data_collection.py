@@ -28,8 +28,6 @@ if __name__ == '__main__':
         all_messages = convo_doc.reference.collection('Messages').order_by(u'Date_Submitted').limit(1).get()
         message_doc = all_messages[0]
         arr.append(message_doc._data["Text"])
-        # leaving this print statement in because the operation is so long running, it's helpful to
-        # prove that the script isn't stuck
-        print(arr)
     with open('floop_data.json', 'w') as f:
-        json.dump(list(set(arr)), f)
+        de_dup_list = set(arr)
+        json.dump(list(de_dup_list), f)
