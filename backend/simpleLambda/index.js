@@ -3,8 +3,11 @@ exports.handler = async (event, context, callback) => {
   console.log(event);
   const response = {
     statusCode: 200,
+    headers: {
+        'Content-Type': 'application/json',
+    },
     body: JSON.stringify("Hi!"),
   };
-  return response;
-  // callback(null,response);
+  //return response;
+  callback(null, response);
 };
