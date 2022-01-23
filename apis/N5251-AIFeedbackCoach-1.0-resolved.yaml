@@ -1,0 +1,62 @@
+---
+swagger: "2.0"
+info:
+  description: AI feedback coach component API
+  version: "1.0"
+  title: AI Feedback coach
+host: virtserver.swaggerhub.com
+basePath: /N5251/AIFeedbackCoach/1.0
+schemes:
+- https
+paths:
+  /feedback:
+    get:
+      summary: returns array of feedback
+      description: gets feedback as array
+      operationId: getFeedback
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: list of feedback
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Feedback'
+        "404":
+          description: not found
+    post:
+      summary: adds feedback message
+      description: Adds a feedback message to assignment
+      operationId: addFeedback
+      consumes:
+      - text/plain; charset=utf-8
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: feedbackMessage
+        required: false
+        schema:
+          $ref: '#/definitions/Feedback'
+      responses:
+        "201":
+          description: Feedback posted successfully
+        "400":
+          description: invalid input
+definitions:
+  Feedback:
+    type: object
+    required:
+    - id
+    - message
+    - seen
+    properties:
+      id:
+        type: string
+        format: uuid
+      message:
+        type: string
+      seen:
+        type: boolean
