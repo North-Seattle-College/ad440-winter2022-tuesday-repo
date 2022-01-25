@@ -1,0 +1,55 @@
+{
+    "AWSTemplateFormatVersion": "winter-2022",
+    "Resources": {
+        "HelloWorld": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "FunctionName": "",
+                "Handler": "lambda/index.handler",
+                "Role": {
+                    "Fn::GetAtt": [
+                        "HelloWorldLambdaRole",
+                        "Arn"
+                    ]
+                },       
+                "Code": {
+                    "S3Bucket": "cm-lambda-code-deploy",
+                    "S3Key": "hello-world.zip"
+                },
+                "Runtime": "nodejs12.x"  
+            }
+        },
+        "HelloWorldLambdaRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": "HelloWorldLambdaRole",
+                "AssumeRolePolicyDocument": {
+                    "Version": "winter-2022",
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": [ "lambda.amazonaws.com" ]
+                        },
+                        "Action": [ "sts:AssumeRole" ]
+                        }]
+                    },
+                    "Path": "/",
+                    "Policies": [{
+                        "PolicyName": "AWSLambdaBasicExecutionRole",
+                        "PolicyDocument": {
+                            "Version": "winter-2022",
+                            "Statement": [{
+                                "Effect": "Allow",
+                                "Action": [
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                ],
+                                "Resource": "*"
+                                }]
+                            }
+                            }]
+                        }
+                    }
+                }
+            }
