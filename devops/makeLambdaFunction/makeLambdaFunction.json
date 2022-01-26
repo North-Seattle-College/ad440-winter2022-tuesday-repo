@@ -1,5 +1,5 @@
 {
-    "AWSTemplateFormatVersion": "winter-2022",
+    "AWSTemplateFormatVersion": "2010-09-09",
     "Resources": {
         "HelloWorld": {
             "Type": "AWS::Lambda::Function",
@@ -24,7 +24,7 @@
             "Properties": {
                 "RoleName": "HelloWorldLambdaRole",
                 "AssumeRolePolicyDocument": {
-                    "Version": "winter-2022",
+                    "Version": "2012-10-17",
                     "Statement": [{
                         "Effect": "Allow",
                         "Principal": {
@@ -37,7 +37,7 @@
                     "Policies": [{
                         "PolicyName": "AWSLambdaBasicExecutionRole",
                         "PolicyDocument": {
-                            "Version": "winter-2022",
+                            "Version": "2012-10-17",
                             "Statement": [{
                                 "Effect": "Allow",
                                 "Action": [
