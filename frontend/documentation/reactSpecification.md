@@ -3,12 +3,18 @@
 ## This document contains React UI components and explains how the states is managed
 
 ## UI Components
-- Feedback.js
 - InputTextBar.js
+    - This contains the text bar that the user can input desired text
 - Send Button
+    - The send button submits the text into the App component
+- Feedback.js
+     - This shows the submitted text from the InputTextBar.js
 - Cancel Button
+    - The cancel button clears the text entry
 - Error Message
-- Success message with message containing feedback on comment
+    - Error message is displayed when something goes wrong or post is not sucessful
+- Success message:
+    - A message containing feedback and analysis on comment
 
 ## State
 - The state starts as an emtpy text. 
