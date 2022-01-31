@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import re
 import nltk
-import multiprocessing
+#import multiprocessing
 from gensim.models import Word2Vec
 from time import time  # To time our operations
 from collections import defaultdict  # For word frequency
@@ -17,10 +17,10 @@ data = pd.read_csv("floop_data_15k.csv")
 
 data.shape
 
-data.head()
+#data.head()
 
-data.info()
-
+#data.info()
+#To remove special characters and punctuation from our dataset
 from string import punctuation
 
 punctuations = punctuation
@@ -51,9 +51,11 @@ x_lemmatized = [[lemma.lemmatize(word) for word in text] for text in x_tokenized
 
 print(x_lemmatized[0])
 
-cores = multiprocessing.cpu_count()
+#cores = multiprocessing.cpu_count()
 
-cores
+#cores
+
+# For classification data whether good or bad.
 
 w2v_model = Word2Vec(min_count=20,
                      window=2,
@@ -62,7 +64,7 @@ w2v_model = Word2Vec(min_count=20,
                      alpha=0.03, 
                      min_alpha=0.0007, 
                      negative=20,
-                     workers=cores-1)
+                     workers= 1 )
 
 t = time()
 
@@ -112,6 +114,8 @@ words['vectorsmean'][0]
 len(words["vectors"][1])
 
 words.head(10)
+
+# FOr plotting 
 
 colors = {1: 'black', -1: 'Red'}
 plt.scatter(words['sentiment_coeff'] , words['vectorsmean'] , c=words['cluster_value'].map(colors))
