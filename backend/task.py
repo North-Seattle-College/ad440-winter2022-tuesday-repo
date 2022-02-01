@@ -6,6 +6,8 @@ import re
 import nltk
 import os
 
+from sqlalchemy import column
+
 from gensim.models import Word2Vec
 from time import time  # To time our operations
 from collections import defaultdict  # For word frequency
@@ -19,6 +21,8 @@ df = pd.read_json (path)
 df.to_csv (r'floop_data_15k.csv', index = None)
 
 data = pd.read_csv("floop_data_15k.csv")
+
+data.rename(column="Field1")
 
 data.shape
 
