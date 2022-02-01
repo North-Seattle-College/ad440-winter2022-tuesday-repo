@@ -33,7 +33,7 @@ def solution(sentence):
         sentence = sentence.replace(p, '')
     return sentence
 
-x = data["DataFromS3"].apply(solution)
+x = data["Field1"].apply(solution)
 pattern = "[^a-zA-Z0-9]"
 x_cleaned = [re.sub(pattern," ",text) for text in x]
 
