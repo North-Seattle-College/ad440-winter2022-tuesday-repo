@@ -14,7 +14,8 @@ logging.basicConfig(format="%(levelname)s - %(asctime)s: %(message)s", datefmt= 
 
 import matplotlib.pyplot as plt
 
-df = pd.read_json (r'floop_data_15k.json')
+path = input("Enter the file Path")
+df = pd.read_json (path)
 df.to_csv (r'floop_data_15k.csv', index = None)
 
 data = pd.read_csv("floop_data_15k.csv")
