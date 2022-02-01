@@ -80,7 +80,7 @@ w2v_model.init_sims(replace=True)
 
 w2v_model.save("word2vec11.model")
 
-word_vectors = Word2Vec.load("/content/word2vec11.model").wv
+word_vectors = Word2Vec.load("/word2vec11.model").wv
 model = KMeans(n_clusters=2, max_iter=1000, random_state=True, n_init=50).fit(X=word_vectors.vectors.astype('double'))
 positive_cluster_center = model.cluster_centers_[0]
 negative_cluster_center = model.cluster_centers_[1]
