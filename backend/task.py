@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import re
 import nltk
-#import multiprocessing
+
 from gensim.models import Word2Vec
 from time import time  # To time our operations
 from collections import defaultdict  # For word frequency
@@ -17,9 +17,7 @@ data = pd.read_csv("floop_data_15k.csv")
 
 data.shape
 
-#data.head()
 
-#data.info()
 #To remove special characters and punctuation from our dataset
 from string import punctuation
 
@@ -51,9 +49,9 @@ x_lemmatized = [[lemma.lemmatize(word) for word in text] for text in x_tokenized
 
 print(x_lemmatized[0])
 
-#cores = multiprocessing.cpu_count()
 
-#cores
+
+
 
 # For classification data whether good or bad.
 
