@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import re
 import nltk
+import os
 
 from gensim.models import Word2Vec
 from time import time  # To time our operations
@@ -12,6 +13,9 @@ import logging  # Setting up the loggings to monitor gensim
 logging.basicConfig(format="%(levelname)s - %(asctime)s: %(message)s", datefmt= '%H:%M:%S', level=logging.INFO)
 
 import matplotlib.pyplot as plt
+
+df = pd.read_json (r'floop_data_15k.json')
+df.to_csv (r'floop_data_15k.csv', index = None)
 
 data = pd.read_csv("floop_data_15k.csv")
 
@@ -119,3 +123,5 @@ colors = {1: 'black', -1: 'Red'}
 plt.scatter(words['sentiment_coeff'] , words['vectorsmean'] , c=words['cluster_value'].map(colors))
 
 plt.show()
+
+os.remove("floop_data_15k.csv")
