@@ -36,7 +36,7 @@ jobs:
         run: |
 
         # disable command workflow processing
-        echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
+       # echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
 
         # log untrusted output
         echo "untrusted output"
