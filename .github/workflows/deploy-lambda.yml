@@ -15,10 +15,6 @@ jobs:
       matrix:
         node-version: [12.x]
     runs-on: ubuntu-latest
-      - name: Set the value
-        id: step_one
-        run:
-          echo "ACTIONS_ALLOW_UNSECURE_COMMANDS=yellow" >> $ACTIONS_ALLOW_UNSECURE_COMMANDS
     steps:
       - uses: actions/checkout@v2
       - name: Set the value
