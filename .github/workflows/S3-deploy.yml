@@ -5,6 +5,10 @@ on:
     branches:
       - "development"
       - "reactS3Deploy"
+  pull:
+    branches:
+      - "development"
+      - "reactS3Deploy"
 
 jobs:
   build:
@@ -29,5 +33,4 @@ jobs:
           aws-production-bucket-name: ${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
           SOURCE_DIR: 'build'
