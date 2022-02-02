@@ -1,13 +1,14 @@
-name: S3-Deploy
+name: S3-deploy
 
 on:
-  push:
+  push: 
     branches:
-      - reactS3Deploy
+      - "reactS3Deploy"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v1
