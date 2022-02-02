@@ -5,10 +5,6 @@ on:
     branches:
       - "development"
       - "reactS3Deploy"
-  pull:
-    branches:
-      - "development"
-      - "reactS3Deploy"
 
 jobs:
   build:
