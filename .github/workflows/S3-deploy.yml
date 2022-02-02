@@ -28,10 +28,10 @@ jobs:
         working-directory: ./frontend/floop_feedback
       - uses: aws-actions/configure-aws-credentials@v1
         with:
+          export aws-region: us-west-2
           args: --acl public-read --follow-symlinks --delete
         env:
           aws-production-bucket-name: ${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
           SOURCE_DIR: 'build'
