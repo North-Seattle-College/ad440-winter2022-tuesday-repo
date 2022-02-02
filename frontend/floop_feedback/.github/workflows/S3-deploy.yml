@@ -6,7 +6,7 @@ on:
       - reactS3Deploy
 
 jobs:
-  Deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
