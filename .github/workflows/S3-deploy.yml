@@ -3,7 +3,6 @@ name: S3-deploy
 on:
   push:
     branches:
-      - "master"
       - "development"
       - "reactS3Deploy"
 
@@ -20,7 +19,7 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npm test
-      - uses: jakejarvis/s3-sync-action@development
+      - uses: aws-actions/configure-aws-credentials@v1
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
