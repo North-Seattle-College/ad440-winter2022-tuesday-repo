@@ -15,13 +15,16 @@ jobs:
       matrix:
         node-version: [12.x]
     runs-on: ubuntu-latest
-    Steps:
       - name: Set the value
         id: step_one
         run:
           echo "ACTIONS_ALLOW_UNSECURE_COMMANDS=yellow" >> $ACTIONS_ALLOW_UNSECURE_COMMANDS
     steps:
       - uses: actions/checkout@v2
+      - name: Set the value
+        id: step_one
+        run: |
+          echo "ACTIONS_ALLOW_UNSECURE_COMMANDS=true" >> $ACTIONS_ALLOW_UNSECURE_COMMANDS
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1.4.2
         with:
