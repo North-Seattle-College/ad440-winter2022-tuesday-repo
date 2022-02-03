@@ -20,6 +20,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+      - uses: jeanlescure/react-deploy-to-s3-action@main
       - run: npm install
         working-directory: ./frontend/floop_feedback
       - run: npm install mini-css-extract-plugin@~2.4.5
@@ -28,8 +29,13 @@ jobs:
         working-directory: ./frontend/floop_feedback
       - uses: aws-actions/configure-aws-credentials@v1
         with:
+          args: --acl public-read --follow-symlinks --delete
           aws-region: ${{ secrets.AWS_REGION }}
           aws-production-bucket-name: ${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SOURCE_DIR: 'build'
+      
+      - name: Copy files to AWS 
+        run: |
+          aws s3 sync . s3://cmn-s3-github-01312022
