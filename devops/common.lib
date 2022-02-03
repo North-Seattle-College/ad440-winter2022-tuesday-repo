@@ -1,0 +1,31 @@
+#################################
+# Validate that a string has the 
+# following characteristics:
+#   - At least 2 chars
+#   - No more than 5 chars
+#   - Has no whitespace
+# Globals:
+#   initials
+# Arguments:
+#   None
+#################################
+function validateInitials()
+{
+  MIN=2
+  MAX=5
+
+  if [ -z "$initials" ]; then
+    printf '%s\n' "Error: initials can't be empty" >&2
+    return 1
+  elif [[ "${initials}" =~ [^a-zA-Z] ]]; then
+    printf '%s\n' "Error: initials must only contain letters, a-z" >&2
+    return 1
+  elif [[ "${#initials}" < $MIN ]]; then
+    printf '%s\n' "Error: initials must be at least $MIN characters" >&2
+    return 1
+  elif [[ "${#initials}" > $MAX ]]; then
+    printf '%s\n' "Error: initials must be no more than $MAX characters" >&2
+    return 1
+  fi
+  return 0
+}

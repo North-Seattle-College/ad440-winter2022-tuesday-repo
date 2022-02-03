@@ -1,32 +1,17 @@
 # !/bin/sh
 
-MIN=2
-MAX=5
-RANDOM_STRING=$(cat /dev/urandom | base64 | tr -dc 'a-z0-9' | fold -w 5 | head -n 1)
 SCRIPT_PATH=$(dirname "$0")
+
+# import validateInitials from common.lib
+. "$SCRIPT_PATH/../common.lib"
+
+
+RANDOM_STRING=$(cat /dev/urandom | base64 | tr -dc 'a-z0-9' | fold -w 5 | head -n 1)
 BUCKET_TEMPLATE="$SCRIPT_PATH/makeReactBucket.json"
 INITIALS_PROMPT="What are your initials? ('q' to quit)"
 
 initials="$1"
 skipPrompt=false
-
-validateInitials()
-{
-  if [ -z "$initials" ]; then
-    printf '%s\n' "Error: initials can't be empty" >&2
-    return 1
-  elif [[ "${initials}" =~ [^a-zA-Z] ]]; then
-    printf '%s\n' "Error: initials must only contain letters, a-z" >&2
-    return 1
-  elif [[ "${#initials}" < $MIN ]]; then
-    printf '%s\n' "Error: initials must be at least $MIN characters" >&2
-    return 1
-  elif [[ "${#initials}" > $MAX ]]; then
-    printf '%s\n' "Error: initials must be no more than $MAX characters" >&2
-    return 1
-  fi
-  return 0
-}
 
 while :
   do
