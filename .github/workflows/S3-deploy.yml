@@ -28,11 +28,8 @@ jobs:
         working-directory: ./frontend/floop_feedback
       - uses: aws-actions/configure-aws-credentials@v1
         with:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_PRODUCTION_BUCKET_NAME: ${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-production-bucket-name: ${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SOURCE_DIR: 'build'
-      
-      - name: Copy files to AWS 
-        run: aws s3 sync ./dist/ s3://cmn-s3-github-01312022 --delete
