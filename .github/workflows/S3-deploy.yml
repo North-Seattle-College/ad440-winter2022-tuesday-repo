@@ -33,3 +33,5 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SOURCE_DIR: 'build'
+      - name: Deploy app build to S3 bucket
+        run: aws s3 sync ./dist/ s3://cmn-s3-github-01312022 --delete
