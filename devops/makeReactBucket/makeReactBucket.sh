@@ -5,7 +5,6 @@ SCRIPT_PATH=$(dirname "$0")
 # import validateInitials from common.lib
 . "$SCRIPT_PATH/../common.lib"
 
-
 RANDOM_STRING=$(cat /dev/urandom | base64 | tr -dc 'a-z0-9' | fold -w 5 | head -n 1)
 BUCKET_TEMPLATE="$SCRIPT_PATH/makeReactBucket.json"
 INITIALS_PROMPT="What are your initials? ('q' to quit)"
@@ -21,13 +20,13 @@ while :
       printf "%s" "> " >&1
       while read initials && [ "$initials" != "q" ];
         do
-          if validateInitials; then
+          if validateInitials $initials; then
             break
           fi
             printf "%s\n" "$INITIALS_PROMPT" >&1
             printf "%s" "> " >&1
         done
-    elif validateInitials; then
+    elif validateInitials $initials; then
       skipPrompt=true
       answer=y
     else

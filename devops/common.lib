@@ -1,18 +1,19 @@
 #################################
-# Validate that a string has the 
-# following characteristics:
+# Validate that a string has the following characteristics:
 #   - At least 2 chars
 #   - No more than 5 chars
 #   - Has no whitespace
 # Globals:
-#   initials
-# Arguments:
 #   None
+# Arguments:
+#   initials
 #################################
 function validateInitials()
 {
   MIN=2
   MAX=5
+
+  initials=$1
 
   if [ -z "$initials" ]; then
     printf '%s\n' "Error: initials can't be empty" >&2
