@@ -4,10 +4,10 @@ MIN=2
 MAX=5
 RANDOM_STRING=$(cat /dev/urandom | base64 | tr -dc 'a-z0-9' | fold -w 5 | head -n 1)
 INITIALS_PROMPT="What are your initials? ('q' to quit)"
-SCRIPT_PATH=`dirname $0`
+SCRIPT_PATH=$(dirname "$0")
 BUCKET_TEMPLATE="$SCRIPT_PATH/makeReactBucket.json"
 
-initials=$1
+initials="$1"
 skipPrompt=false
 
 while :
