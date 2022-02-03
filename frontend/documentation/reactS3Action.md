@@ -49,12 +49,6 @@ _Note: Confirm the Endpoint, the website will be accessible in the browser using
 
 __* At this point, if not already, the gitHub Rpository should be created along with the React app pushed to the repo *__
 
-#### Continue on AWS:
-1. Click on __IAM__ under the __Security, Indentity, & Compliance__ section.
-2. Click on __Users__ and select preferred user(s)
-3. Under __Security Credentials__ click on __Create Access Key__ 
-This creates a ___AWS_ACCESS_KEY_ID___ and ___AWS_SECRET_ACCESS_KEY___ copy these values.
-
 #### On the GitHub Repo:
 1. Click on the __Settings__ Tab.
 2. Select __Secret__ on the left side menu
@@ -70,37 +64,54 @@ This creates a ___AWS_ACCESS_KEY_ID___ and ___AWS_SECRET_ACCESS_KEY___ copy thes
 
 ### Setup GitHub Actions
 1. While In the Github repo, click on the __Actions__ tab.
-2. On the __Actions__ page, click on the "__Set up this workflow__" or __Set up a workflow yourself__ button. _This takes you to a new page with a web editor with some container code which can be deleted_
-3. Change "__blank.yml__" to an appropriate name (like s3-deploy).
-4. Copy and Paste the code snippet into the editor: _NOTE: This is a general format and modifications based on the Repo and Bucket setup may slightly change in deployment settings_
+2. On the __Actions__ page, click on the "__Set up this workflow__" or __Set up a workflow yourself__ button. _This takes you to a new page with a web editor with some container code which can be copied and deleted_
+3. Copy this container code for the next step.
+
+### Return to your working Branch
+1. Create a `.github` folder
+2. In the `.github` folder create another folder named `workflows`
+3. while in the `workflows` create a `.yml` file with a name that describes the action (example `S3-deploy.yml`)
+4. Paste the filler `.yml` provided by GitHub
+5. Make the following adjustments to the `.yml` file:
 ~~~~
-name: s3-deploy
+name: S3-deploy
 
 on:
   push:
     branches:
-      - development 
-      - master
+      - "development"
+      - "react-S3-action"
   pull_request:
     branches:
-      - development
+      - "development"
+      - "react-S3-action"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [15.x]
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - uses: actions/checkout@v1
+      - run: npm install
+        working-directory: ./frontend/floop_feedback
+      - run: npm install mini-css-extract-plugin@~2.4.5
+        working-directory: ./frontend/floop_feedback
+      - run: npm run build
+        working-directory: ./frontend/floop_feedback
+      - uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws_s3_bucket: ${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-production-bucket-name: ${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-      - name: Build React App
-        run: npm install && npm run build
+          SOURCE_DIR: 'build'
       - name: Deploy app build to S3 bucket
-        run: aws s3 sync ./dist/ s3://<bucket-name> --delete
+        working-directory: ./frontend/floop_feedback
+        run: aws s3 sync ./build s3://${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}
 ~~~~
 
 The file is made of 3 different parts to help with the understanding:
@@ -110,14 +121,8 @@ The file is made of 3 different parts to help with the understanding:
     * __steps:__ A job contains a sequence of tasks.. Steps run commands nad actions in your repo.
     * __actions/checkout@v2:__ Checks out the repo so workflow can access it.
     * __aws-actions/configure-aws-credentials@v1:__ This configures AWS credentials & region environment for use in other GitHub Actions
-    * __Build React App:__ Installs node packages and runs the build in the __package.json__ file, and creates a __dist__ folder in the root directory.
+    * __Build React App:__ Installs node packages and runs the build in the __package.json__ file, and creates a __build__ folder in the root directory.
     * __Deploy app build to S3 bucket:__  This deploys the newly created build to S3 bucket _bucket-name_ (replace with the name of the created S3 bucket) 
-
-To save, click on the __Start Commit__ then __Commit New File__.
-Doing so will:
-* Save the Action creating a .github directory with a workflows directory in it.
-* It will contained the file s3-deploy (or whatever name assigned to it)
-* Trigger the actions assigned.
 
 ## You should be all set!!
 
