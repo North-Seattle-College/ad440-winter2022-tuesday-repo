@@ -35,4 +35,4 @@ jobs:
           SOURCE_DIR: 'public'
       - name: Deploy app build to S3 bucket
         working-directory: ./frontend/floop_feedback
-        run: aws s3 sync . s3://cmn-s3-github-01312022
+        run: aws s3 sync . s3://${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}
