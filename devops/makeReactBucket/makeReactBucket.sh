@@ -3,12 +3,30 @@
 MIN=2
 MAX=5
 RANDOM_STRING=$(cat /dev/urandom | base64 | tr -dc 'a-z0-9' | fold -w 5 | head -n 1)
-INITIALS_PROMPT="What are your initials? ('q' to quit)"
 SCRIPT_PATH=$(dirname "$0")
 BUCKET_TEMPLATE="$SCRIPT_PATH/makeReactBucket.json"
+INITIALS_PROMPT="What are your initials? ('q' to quit)"
 
 initials="$1"
 skipPrompt=false
+
+validateInitials()
+{
+  if [ -z "$initials" ]; then
+    printf '%s\n' "Error: initials can't be empty" >&2
+    return 1
+  elif [[ "${initials}" =~ [^a-zA-Z] ]]; then
+    printf '%s\n' "Error: initials must only contain letters, a-z" >&2
+    return 1
+  elif [[ "${#initials}" < $MIN ]]; then
+    printf '%s\n' "Error: initials must be at least $MIN characters" >&2
+    return 1
+  elif [[ "${#initials}" > $MAX ]]; then
+    printf '%s\n' "Error: initials must be no more than $MAX characters" >&2
+    return 1
+  fi
+  return 0
+}
 
 while :
   do
@@ -18,23 +36,17 @@ while :
       printf "%s" "> " >&1
       while read initials && [ "$initials" != "q" ];
         do
-          if [ -z "$initials" ]; then
-            printf '%s\n' "Error: initials can't be empty" >&2
-          elif [[ "${initials}" =~ [^a-zA-Z] ]]; then
-            printf '%s\n' "Error: initials must only contain letters, a-z" >&2
-          elif [[ "${#initials}" < $MIN ]]; then
-            printf '%s\n' "Error: initials must be at least $MIN characters" >&2
-          elif [[ "${#initials}" > $MAX ]]; then
-            printf '%s\n' "Error: initials must be no more than $MAX characters" >&2
-          else
+          if validateInitials; then
             break
           fi
             printf "%s\n" "$INITIALS_PROMPT" >&1
             printf "%s" "> " >&1
         done
-    else
+    elif validateInitials; then
       skipPrompt=true
       answer=y
+    else
+      break
     fi
 
     if [ "$initials" == "q" ]; then
