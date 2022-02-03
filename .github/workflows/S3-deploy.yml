@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - uses: jeanlescure/react-deploy-to-s3-action@main
+      - uses: jakejarvis/s3-sync-action@master
       - run: npm install
         working-directory: ./frontend/floop_feedback
       - run: npm install mini-css-extract-plugin@~2.4.5
