@@ -16,13 +16,15 @@ logging.basicConfig(format="%(levelname)s - %(asctime)s: %(message)s", datefmt= 
 
 import matplotlib.pyplot as plt
 
+
+# nltk.download()
 path = input("Enter the file Path")
 df = pd.read_json (path)
 df.to_csv (r'floop_data_15k.csv', index = None)
 
 data = pd.read_csv("floop_data_15k.csv")
 
-data.rename(column="Field1")
+data.columns= ["Field1"]
 
 data.shape
 
@@ -47,6 +49,7 @@ x_lowered
 x_lowered[0]
 
 nltk.download('punkt')
+nltk.download('omw-1.4')
 
 x_tokenized = [nltk.word_tokenize(text) for text in x_lowered]
 
@@ -64,14 +67,7 @@ print(x_lemmatized[0])
 
 # For classification data whether good or bad.
 
-w2v_model = Word2Vec(min_count=20,
-                     window=2,
-                     size=300,
-                     sample=6e-5, 
-                     alpha=0.03, 
-                     min_alpha=0.0007, 
-                     negative=20,
-                     workers= 1 )
+w2v_model = Word2Vec(min_count=20,window=2,sample=6e-5, alpha=0.03, min_alpha=0.0007, negative=20,workers= 1 )
 
 t = time()
 
@@ -130,3 +126,4 @@ plt.scatter(words['sentiment_coeff'] , words['vectorsmean'] , c=words['cluster_v
 plt.show()
 
 os.remove("floop_data_15k.csv")
+os.remove("word2vec11.model")
