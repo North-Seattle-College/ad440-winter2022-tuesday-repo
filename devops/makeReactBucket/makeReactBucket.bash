@@ -3,10 +3,11 @@
 SCRIPT_PATH=$(dirname "$0")
 
 # import validateInitials from common.lib
+# shellcheck disable=SC1091
 . "$SCRIPT_PATH/../common.lib"
 
 RANDOM_STRING=$(cat /dev/urandom | base64 | tr -dc 'a-z0-9' | fold -w 5 | head -n 1)
-BUCKET_TEMPLATE="$SCRIPT_PATH/makeReactBucket.json"
+BUCKET_TEMPLATE="$SCRIPT_PATH/makeReactBucket.yml"
 INITIALS_PROMPT="What are your initials? ('q' to quit)"
 
 initials="$1"
@@ -61,7 +62,7 @@ while :; do
   fi
 
   if [ "${answer:0:1}" == "y" ]; then
-    printf '%s\n' "aws cloudformation deploy --template-file ./makeReactBucket.json --stack-name $stackName --parameter-overrides BucketName=$bucketName" >&1
+    printf '%s\n' "aws cloudformation deploy --template-file $BUCKET_TEMPLATE --stack-name $stackName --parameter-overrides BucketName=$bucketName" >&1
     aws cloudformation deploy --template-file "$BUCKET_TEMPLATE" --stack-name "$stackName" --parameter-overrides BucketName="$bucketName"
   fi
   printf '%s\n' "Done" >&1
