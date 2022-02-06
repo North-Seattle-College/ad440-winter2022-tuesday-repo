@@ -8,6 +8,10 @@ on:
     branches:
       - ab-24
 
+env: 
+  #set environment variable
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
 jobs:
   deploy_source:
     name: build and deploy lambda
@@ -15,12 +19,9 @@ jobs:
       matrix:
         node-version: [12.x]
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
-      - name: Set the value
-      id: step_one
-      run:
-        echo "ACTIONS_ALLOW_UNSECURE_COMMANDS=yellow" >> $ACTIONS_ALLOW_UNSECURE_COMMANDS
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1.4.2
         with:
@@ -35,14 +36,3 @@ jobs:
           aws_region: ${{ secrets.AWS_REGION }}
           function_name: ab-o7sk3-20220131-lambda
           zip_file: bundle.zip
-      #- name: log untrusted output
-      #run: |
-
-        # disable command workflow processing
-        #echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
-
-        # log untrusted output
-        #echo "untrusted output"
-
-        # enable workflow command processing
-        #echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
