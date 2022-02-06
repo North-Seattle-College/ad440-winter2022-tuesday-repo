@@ -1,0 +1,19 @@
+{
+  "name": "ad440-winter2022-tuesday-repo",
+  "version": "1.0.0",
+  "description": "North Seattle College AD 440 Winter 2020 Cloud Practicum class repoitory",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/North-Seattle-College/ad440-winter2022-tuesday-repo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/North-Seattle-College/ad440-winter2022-tuesday-repo/issues"
+  },
+  "homepage": "https://github.com/North-Seattle-College/ad440-winter2022-tuesday-repo#readme"
+}
