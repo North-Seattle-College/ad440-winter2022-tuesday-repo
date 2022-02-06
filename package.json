@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/North-Seattle-College/ad440-winter2022-tuesday-repo/issues"
   },
-  "homepage": "https://github.com/North-Seattle-College/ad440-winter2022-tuesday-repo#readme"
+  "homepage": "https://github.com/North-Seattle-College/ad440-winter2022-tuesday-repo#readme",
+  "dependencies": {
+    "typescript": "^4.5.5"
+  }
 }
