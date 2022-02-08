@@ -13,17 +13,31 @@ env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
 jobs:
-    deploy:
+    deploy_lambda:
     name: deploy lambda function
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: AWS Lambda Deploy
-      uses: appleboy/lambda-action@master
+    - uses: actions/setup-node@v2
       with:
-        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws_region: ${{ secrets.AWS_REGION }}
-          function_name: ab-o7sk3-20220131-lambda
-          zip_file: output.zip
+        node_version: [6.x]
+
+    - name: AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ secrets.AWS_REGION }}
+
+    - name: npm install
+      env:
+          CI: true
+        run: |
+          npm ci
+
+    - name: deploy
+        run: |
+          zip -j deploy.zip ./*
+          aws lambda update-function-code --function-name=ab-o7sk3-20220131-lambda --zip-file=fileb://deploy.zip 
+
 
