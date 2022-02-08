@@ -20,7 +20,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: [6.x]
-
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
