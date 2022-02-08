@@ -28,16 +28,12 @@ jobs:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: ${{ secrets.AWS_REGION }}
-
       - name: npm install
         env:
             CI: true
           run: |
             npm ci
-
-    - name: deploy
-        run: |
-          zip -j deploy.zip ./*
-          aws lambda update-function-code --function-name=ab-o7sk3-20220131-lambda --zip-file=fileb://deploy.zip 
-
-
+      - name: deploy
+          run: |
+            zip -j deploy.zip ./*
+            aws lambda update-function-code --function-name=ab-o7sk3-20220131-lambda --zip-file=fileb://deploy.zip 
