@@ -27,11 +27,11 @@ while :; do
       printf "%s\n" "$INITIALS_PROMPT" >&1
       printf "%s" "> " >&1
     done
-  elif validateInitials "$initials"; then    
+  elif validateInitials "$initials"; then
     if [[ -z "$region" ]]; then
       region="us-west-2"
     elif ! validateRegion "$region"; then
-      break;
+      break
     fi
 
     skipPrompt=true
