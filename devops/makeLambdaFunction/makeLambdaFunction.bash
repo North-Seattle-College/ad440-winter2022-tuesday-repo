@@ -27,6 +27,8 @@ while :
       break
     fi
 
+    fileName="index.zip"
+
 
     # converts initials to lowercase and remove spaces
     formattedInitials="$(echo "${initials}" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
@@ -38,20 +40,32 @@ while :
     bucketName=$uniqueName-bucket
     stackName=$uniqueName-stack
 
-    printf "%s\n" "Your lambda function and stack will be named as follows:" \
+    printf "%s\n" "Your S3 bucket, Lambda function and CloudFormation stack will be named as follows:" \
+            "file name: $fileName" \
+            "bucket: $bucketName" \
             "lambda: $lambdaName" \
             "stack: $stackName" \
-            "Create lambda function and stack? (y/n)" 
+            "Create S3 bucket, Lambda function and CloudFormation stack? (y/n)" 
 
     lambdaTemplate="./makeLambdaFunction.yml"
     while read answer && [ "$answer" != "q" ];
       do
         if [ "$answer" == "y" ]; then
-          printf '%s\n' "aws cloudformation deploy --template-file $lambdaTemplate --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM"
+          printf '%s\n' "aws s3 mb s3://$bucketName"
+          # creates the S3 bucket
           aws s3 mb s3://$bucketName
+
+          printf '%s\n' "aws s3 cp $fileName s3://$bucketName"
+          # adds the file to the S3 bucket
+          aws s3 cp $fileName s3://$bucketName
+
+          printf '%s\n' "aws cloudformation package --template-file $lambdaTemplate --s3-bucket $bucketName --output-template-file packagedTemplate.yml"
+          # uploads the code file to the S3 bucket and returns a template file with the bucket name
           aws cloudformation package --template-file $lambdaTemplate --s3-bucket $bucketName --output-template-file packagedTemplate.yml
+          
+          printf '%s\n' "aws cloudformation deploy --template-file packagedTemplate.yml --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM"
+          # deploys the stack
           aws cloudformation deploy --template-file packagedTemplate.yml --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM
-          # aws cloudformation deploy --template-file $lambdaTemplate --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM
           break
         elif [ "$answer" == "n" ]; then
           break
