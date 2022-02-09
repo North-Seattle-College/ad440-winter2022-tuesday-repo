@@ -11,6 +11,7 @@ BUCKET_TEMPLATE="$SCRIPT_PATH/makeReactBucket.yml"
 INITIALS_PROMPT="What are your initials? ('q' to quit)"
 
 initials="$1"
+region="$2"
 skipPrompt=false
 
 while :; do
@@ -20,12 +21,19 @@ while :; do
     printf "%s" "> " >&1
     while read -r initials && [ "$initials" != "q" ]; do
       if validateInitials "$initials"; then
+        region="us-west-2"
         break
       fi
       printf "%s\n" "$INITIALS_PROMPT" >&1
       printf "%s" "> " >&1
     done
-  elif validateInitials "$initials"; then
+  elif validateInitials "$initials"; then    
+    if [[ -z "$region" ]]; then
+      region="us-west-2"
+    elif ! validateRegion "$region"; then
+      break;
+    fi
+
     skipPrompt=true
     answer=y
   else
@@ -62,8 +70,8 @@ while :; do
   fi
 
   if [ "${answer:0:1}" == "y" ]; then
-    printf '%s\n' "aws cloudformation deploy --template-file $BUCKET_TEMPLATE --stack-name $stackName --parameter-overrides BucketName=$bucketName" >&1
-    aws cloudformation deploy --template-file "$BUCKET_TEMPLATE" --stack-name "$stackName" --parameter-overrides BucketName="$bucketName"
+    printf '%s\n' "aws cloudformation deploy --region $region --template-file $BUCKET_TEMPLATE --stack-name $stackName --parameter-overrides BucketName=$bucketName" >&1
+    aws cloudformation deploy --region $region --template-file "$BUCKET_TEMPLATE" --stack-name "$stackName" --parameter-overrides BucketName="$bucketName"
   fi
   printf '%s\n' "Done" >&1
   break
