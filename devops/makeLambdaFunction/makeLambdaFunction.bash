@@ -27,7 +27,10 @@ while :
       break
     fi
 
+
+
     fileName="index.zip"
+    regionName="us-west-2"
 
 
     # converts initials to lowercase and remove spaces
@@ -66,6 +69,15 @@ while :
           printf '%s\n' "aws cloudformation deploy --template-file packagedTemplate.yml --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM"
           # deploys the stack
           aws cloudformation deploy --template-file packagedTemplate.yml --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM
+         
+          printf '%s\n' "aws s3 rm s3://$bucketName --recursive"
+          # empties the S3 bucket
+          aws s3 rm s3://$bucketName --recursive
+
+          printf '%s\n' "aws s3api delete-bucket --bucket $bucketName --region $regionName" 
+          # deletes the S3 bucket
+          aws s3api delete-bucket --bucket $bucketName --region $regionName
+
           break
         elif [ "$answer" == "n" ]; then
           break
