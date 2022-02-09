@@ -1,16 +1,16 @@
-Parameters: 
-  LambdaName: 
+Parameters:
+  LambdaName:
     Description: Unique name of your Lambda function.
     Type: String
-    
 Resources:
   makeLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Ref LambdaName
+      FunctionName:
+        Ref: LambdaName
       Role: arn:aws:iam::061431082068:role/Lambda_Role
       Runtime: nodejs14.x
       Handler: index.handler
-      Code: index.js
-      
-          
+      Code:
+        S3Bucket: kj-cw0gc-20220208-bucket
+        S3Key: d05c5e2e3e209a2f6f0fe0e2316b2c61
