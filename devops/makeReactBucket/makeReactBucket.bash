@@ -40,7 +40,7 @@ while :; do
     break
   fi
 
-  if [ "$initials" == "q" ]; then
+  if [[ "$initials" == "q" ]]; then
     printf '%s\n' "Done" >&1
     break
   fi
@@ -73,6 +73,9 @@ while :; do
     printf '%s\n' "aws cloudformation deploy --region $region --template-file $BUCKET_TEMPLATE --stack-name $stackName --parameter-overrides BucketName=$bucketName" >&1
     aws cloudformation deploy --region $region --template-file "$BUCKET_TEMPLATE" --stack-name "$stackName" --parameter-overrides BucketName="$bucketName"
   fi
+  printf '%s\n' "Setting BUCKET_NAME environment variable to $bucketName" >&1
   printf '%s\n' "Done" >&1
   break
 done
+
+export BUCKET_NAME=$bucketName
