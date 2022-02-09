@@ -69,7 +69,7 @@ while :; do
     done
   fi
 
-  if [ "${answer:0:1}" == "y" ]; then
+  if [[ "${answer:0:1}" == "y" ]]; then
     printf '%s\n' "aws cloudformation deploy --region $region --template-file $BUCKET_TEMPLATE --stack-name $stackName --parameter-overrides BucketName=$bucketName" >&1
     aws cloudformation deploy --region $region --template-file "$BUCKET_TEMPLATE" --stack-name "$stackName" --parameter-overrides BucketName="$bucketName"
   fi
