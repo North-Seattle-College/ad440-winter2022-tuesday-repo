@@ -8,6 +8,10 @@ const Container = () => {
     const [state, setState] = useState('')
     const [content, setContent] = useState('')
     const [isVisible, setIsVisible] = useState(false)
+    const [feedback, setFeedback] = useState('')
+    const [response, setResponse] = useState('')
+    const [empty, setEmpty] = useState(false)
+    const [error, setError] = useState(false)
 
     const onInputSubmit = term => {
         const requestConfig = {
