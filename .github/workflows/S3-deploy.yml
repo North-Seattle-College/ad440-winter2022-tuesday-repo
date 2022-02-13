@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - "development"
-      - "react-S3-action"
+      - "deploy-s3-script-action"
   pull_request:
     branches:
       - "development"
-      - "react-S3-action"
+      - "deploy-s3-script-action"
 
 jobs:
   build:
@@ -28,11 +28,14 @@ jobs:
         working-directory: ./frontend/floop_feedback
       - uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-region: ${{ secrets.AWS_REGION }}
-          aws-production-bucket-name: ${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}
+          aws-region: us-west-2
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SOURCE_DIR: 'build'
+      - run: . ./.github/scripts/makeReactBucket.bash cmn us-west-2
+        shell: bash
+      - run: |
+          echo "${{ env.BUCKET_NAME }}"
       - name: Deploy app build to S3 bucket
         working-directory: ./frontend/floop_feedback
-        run: aws s3 sync ./build s3://${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}
+        run: aws s3 sync ./build s3://${{ env.BUCKET_NAME }}

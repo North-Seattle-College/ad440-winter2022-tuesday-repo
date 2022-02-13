@@ -34,10 +34,10 @@ function validateRegion() {
   return 1
 }
 
-RANDOM_STRING=$(cat /dev/urandom | base64 | tr -dc 'a-z0-9' | fold -w 5 | head -n 1)
-BUCKET_TEMPLATE="../../devops/makeReactBucket/makeReactBucket.yml"
+OPENSSL_STRING=$(openssl rand -hex 3)
+RANDOM_STRING=${OPENSSL_STRING:0:5}
+BUCKET_TEMPLATE=".github/scripts/makeReactBucket.yml"
 INITIALS_PROMPT="What are your initials? ('q' to quit)"
-
 initials="$1"
 region="$2"
 skipPrompt=false
@@ -106,4 +106,4 @@ while :; do
   break
 done
 
-export BUCKET_NAME=$bucketName
+echo "BUCKET_NAME=$bucketName" >> "$GITHUB_ENV"
