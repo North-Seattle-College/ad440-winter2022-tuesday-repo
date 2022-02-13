@@ -7,6 +7,7 @@ const Container = () => {
 
     const [state, setState] = useState('')
     const [content, setContent] = useState('')
+    const [isVisible, setIsVisible] = useState(false)
 
     const onInputSubmit = term => {
         const requestConfig = {
@@ -31,6 +32,7 @@ const Container = () => {
         <div className="ui card" style={{margin:'50px'}}>
             <InputTextBar onSubmit={onInputSubmit} />
             <Feedback content = {content} />
+            {/* {isVisible? <ErrorMessage /> : null} */}
         </div>
     )
 }
