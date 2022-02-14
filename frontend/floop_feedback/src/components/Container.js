@@ -1,44 +1,23 @@
 import React, { useState } from 'react'
 
-import Feedback from './Feedback';
-import InputTextBar from './InputTextBar';
+import FeedbackText from './FeedbackText';
+import FeedbackAnalysis from './FeedbackAnalysis';
+import SubmitButton from './SubmitButton';
+import ErrorMessage from './ErrorMessage';
 
 const Container = () => {
-
-    const [state, setState] = useState('')
-    const [content, setContent] = useState('')
-    const [isVisible, setIsVisible] = useState(false)
-    const [feedback, setFeedback] = useState('')
-    const [response, setResponse] = useState('')
-    const [empty, setEmpty] = useState(false)
-    const [error, setError] = useState(false)
-
-    const onInputSubmit = term => {
-        const requestConfig = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: term })
-        };
-
-        fetch("https://reqres.in/api/users/", requestConfig)
-          .then(res => {
-                return res.json()
-          })
-          .then(content => { setContent(content); })
-          .catch(err => console.log('Unknown error: ', err));
-
-          console.log(term);
-
-          setState({content: term})
-    }
+    const [feedback, setFeedback] = useState('');
+    const [response, setResponse] = useState('');
+    const [empty, setEmpty] = useState(false);
+    const [error, setError] = useState(false);
     
     return (
         <div className="ui card" style={{margin:'50px'}}>
-            <InputTextBar onSubmit={onInputSubmit} />
-            <Feedback content = {content} />
-            {/* {isVisible? <ErrorMessage /> : null} */}
+            <FeedbackText feedback={feedback} setFeedback={setFeedback} setEmpty={setEmpty} />
+            <SubmitButton empty={empty} feedback={feedback} setResponse={setResponse} setError={setError} />
+            {!error ? <FeedbackAnalysis response={response} /> : <ErrorMessage error={setError}/>}
         </div>
-    )
+    );
 }
 
 export default Container;
