@@ -5,10 +5,14 @@ on:
     branches:
       - "development"
       - "deploy-s3-script-action"
+      - "test-action"
   pull_request:
     branches:
       - "development"
       - "deploy-s3-script-action"
+      - "test-action"
+env:
+  GITHUB_ACTOR: ${GITHUB_ACTOR}
 
 jobs:
   build:
@@ -19,6 +23,10 @@ jobs:
         node-version: [15.x]
 
     steps:
+      - name: Set env
+        run: echo "ACTOR_INITIALS=$(echo $GITHUB_ACTOR | cut -c 1-4)" >> $GITHUB_ENV
+      - name: Show Initials
+        run: echo ${{ env.ACTOR_INITIALS }}
       - uses: actions/checkout@v1
       - run: npm install
         working-directory: ./frontend/floop_feedback
@@ -32,7 +40,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SOURCE_DIR: 'build'
-      - run: . ./.github/scripts/makeReactBucket.bash cmn us-west-2
+      - run: . ./.github/scripts/makeReactBucket.bash ${{ env.ACTOR_INITIALS }} us-west-2
         shell: bash
       - run: |
           echo "${{ env.BUCKET_NAME }}"
