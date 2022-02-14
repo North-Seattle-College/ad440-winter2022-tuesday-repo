@@ -4,12 +4,12 @@ on:
   push:
     branches:
       - "development"
-      - "deploy-s3-script-action"
+      - "s3-deploy-github-action"
       - "test-action"
   pull_request:
     branches:
       - "development"
-      - "deploy-s3-script-action"
+      - "s3-deploy-github-action"
       - "test-action"
 env:
   GITHUB_ACTOR: ${GITHUB_ACTOR}
