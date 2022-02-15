@@ -15,7 +15,7 @@ const Container = () => {
         <div className="ui card" style={{margin:'50px'}}>
             <FeedbackText feedback={feedback} setFeedback={setFeedback} setEmpty={setEmpty} />
             <SubmitButton empty={empty} feedback={feedback} setResponse={setResponse} setError={setError} />
-            {!error ? <FeedbackAnalysis response={response} /> : <ErrorMessage error={setError}/>}
+            {!error ? <FeedbackAnalysis response={response} /> : <ErrorMessage error={Error}/>}
         </div>
     );
 }
