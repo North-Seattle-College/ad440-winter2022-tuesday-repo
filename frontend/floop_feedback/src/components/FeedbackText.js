@@ -1,5 +1,5 @@
 import React from "react";
-function FeedbackText ({feedback, setFeedback, setValid}) {
+function FeedbackText ({feedback, setFeedback, setEmpty}) {
     return (
     <div>
       <div className="field">
@@ -10,11 +10,11 @@ function FeedbackText ({feedback, setFeedback, setValid}) {
             value = {feedback}
             onChange={(e) => {
                 if(e.target.value === ""){
-                  setValid(false)
+                  setEmpty(false)
                   setFeedback("")
                 }else{
                   setFeedback(e.target.value)
-                  setValid(true)
+                  setEmpty(true)
               }
             }}
           />
