@@ -1,5 +1,4 @@
 import React from "react";
-import ErrorMessage from "./ErrorMessage";
 
 class InputTextBar extends React.Component {
     state = {term: ''};
