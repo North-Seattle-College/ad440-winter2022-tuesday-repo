@@ -24,7 +24,6 @@ class InputTextBar extends React.Component {
                 <div className="ui button" style={{marginLeft:'190px', marginBottom:"5px"}} onClick={this.onFormSubmit}>
                     Submit
                 </div>
-                <ErrorMessage onSubmit={this.onInputSubmit} />
             </form>
         </div>
         );
