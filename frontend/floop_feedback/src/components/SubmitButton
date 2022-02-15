@@ -22,7 +22,7 @@ function SubmitButton({empty, feedback, setResponse, setError}) {
   }
   return (
     <div>
-      <button disabled={!empty} onClick={inputSubmit}>Submit</button>
+      <button disabled={empty} onClick={inputSubmit}>Submit</button>
     </div>
   );
 }
