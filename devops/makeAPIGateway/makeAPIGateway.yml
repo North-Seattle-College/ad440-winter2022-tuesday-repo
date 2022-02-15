@@ -11,7 +11,7 @@ Resources:
       Description: An API Gateway with a Mock Integration
       EndpointConfiguration:
         Types:
-          - PRIVATE
+          - REGIONAL
       Name: mock-api
 
   ApiGatewayResource:
