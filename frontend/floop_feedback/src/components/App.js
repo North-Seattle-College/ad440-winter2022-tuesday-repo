@@ -1,6 +1,7 @@
 import React from "react";
 import InputTextBar from "./InputTextBar";
 import Feedback from "./Feedback";
+//import ErrorMessage from "./ErrorMessage";
 
 class App extends React.Component{
     state = { content: ''}
