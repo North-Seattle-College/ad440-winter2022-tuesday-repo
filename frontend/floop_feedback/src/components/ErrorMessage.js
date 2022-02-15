@@ -1,23 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-//import InputTextBar from "./InputTextBar";
 
-function ErrorMessage() {
-  const [errorMessage, setErrorMessage] = React.useState("");
-  const handleClick = () => {
-    setErrorMessage("Example error message!")
-  }
+function ErrorMessage ({error}) {
   return (
-    <div className="ErrorMessage">
-      <button onClick={handleClick}>Show error message</button>
-      {errorMessage && <div className="error"> {errorMessage} </div>}
+    <div className="ErrorMessage ui">
+      <textarea readOnly
+        value = {error}
+      />
     </div>
   );
 }
-
-ReactDOM.render(
-  <ErrorMessage />, 
-  document.getElementById('root')
-);
 
 export default ErrorMessage;
