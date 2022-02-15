@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Feedback({response}) {
+export default function FeedbackAnalysis({response}) {
     return(
         <div className = "feedback">
             <br/>
@@ -8,5 +8,4 @@ export default function Feedback({response}) {
             <div className="analysis">{response}</div>
         </div>
     )
-
 }
