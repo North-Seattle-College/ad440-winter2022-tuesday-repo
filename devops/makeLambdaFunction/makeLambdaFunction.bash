@@ -58,10 +58,6 @@ while :
           # creates the S3 bucket
           aws s3 mb s3://$bucketName
 
-          printf '%s\n' "aws s3 cp $fileName s3://$bucketName"
-          # adds the file to the S3 bucket
-          aws s3 cp $fileName s3://$bucketName
-
           printf '%s\n' "aws cloudformation package --template-file $lambdaTemplate --s3-bucket $bucketName --output-template-file packagedTemplate.yml"
           # uploads the code file to the S3 bucket and returns a template file with the bucket name
           aws cloudformation package --template-file $lambdaTemplate --s3-bucket $bucketName --output-template-file packagedTemplate.yml
