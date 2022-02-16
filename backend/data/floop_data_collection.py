@@ -7,29 +7,39 @@ from datetime import datetime
 from firebase_admin import firestore
 from os.path import exists
 
+
 def get_credentials():
     cert_path = input('enter path to cert file: ')
     while not exists(cert_path):
-        cert_path = input('invalid file path. Please enter path to Floop cert file: ')
+        cert_path = input(
+            'invalid file path. Please enter path to Floop cert file: ')
     return cert_path
 
 
 def connect_s3():
-    key_id = sys.argv[2] if len(sys.argv) > 2 else input("Enter your AWS access key id: ")
-    # we know what a secret access key ID should look like but not what the key itself should look like
-    # docs https://docs.aws.amazon.com/STS/latest/APIReference/API_Credentials.html
+    key_id = sys.argv[2] if len(sys.argv) > 2 else input(
+        "Enter your AWS access key id: ")
+    '''
+    we know what a secret access key ID should look like but not what
+    the key itself should look like.
+    https://docs.aws.amazon.com/STS/latest/APIReference/API_Credentials.html
+    '''
+
     while not re.match("\w{16,128}", key_id):
         print("Key in incorrect format, please try again")
         key_id = input("re-enter your key: ")
-    secret_key = sys.argv[3] if len(sys.argv) > 3 else input("enter your AWS secret access key: ")
-    return boto3.Session(aws_access_key_id=key_id, aws_secret_access_key=secret_key)
+    secret_key = sys.argv[3] if len(sys.argv) > 3 else input(
+        "enter your AWS secret access key: ")
+    return boto3.Session(
+        aws_access_key_id=key_id, aws_secret_access_key=secret_key)
 
 
 def upload_s3(json):
     s3_session = connect_s3().resource('s3')
     time = datetime.now().strftime("%m-%d-%Y-%H-%M-%S")
     # add file to bucket with current date and time for posterity
-    s3_session_object = s3_session.Object('floop-dataset', 'floopData' + time + '.json')
+    s3_session_object = s3_session.Object(
+        'floop-dataset', 'floopData' + time + '.json')
     result = s3_session_object.put(Body=json)
     extracted_status_code = result["ResponseMetadata"]["HTTPStatusCode"]
     if int(extracted_status_code) >= 400:
@@ -45,20 +55,27 @@ def initalize_connection(cert_path):
     firebase_admin.initialize_app(cred_obj)
     db = firestore.client()
     # exclude certain types of comment, on Floop's suggestion
-    return db.collection(u'Databases/Dev_Database/Conversations')\
+    return db\
+        .collection(u'Databases/Dev_Database/Conversations')\
         .where('Comment_Preview',
                'not-in',
-               ['What is your goal for this year?', 'Audio Comment', 'Freeform', 'Freeform Comment', '', ' '])\
-        .limit(10).stream()
+               ['What is your goal for this year?',
+                'Audio Comment',
+                'Freeform',
+                'Freeform Comment',
+                '', ' '])\
+        .limit(1000).stream()
 
 
-# descend into the tree of document -> collection -> document and pull out salient text
+# descend into the tree of document -> collection -> document and
+# pull out salient text
 if __name__ == '__main__':
     arr = []
     cert_path = sys.argv[1] if len(sys.argv) > 1 else get_credentials()
     conversation_documents = initalize_connection(cert_path)
     for convo_doc in conversation_documents:
-        all_messages = convo_doc.reference.collection('Messages').order_by(u'Date_Submitted').limit(1).get()
+        all_messages = convo_doc.reference.collection('Messages')\
+            .order_by(u'Date_Submitted').get()
         if not all_messages:
             continue
         message_doc = all_messages[0]
