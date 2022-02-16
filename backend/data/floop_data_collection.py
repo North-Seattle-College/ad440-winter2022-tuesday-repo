@@ -111,8 +111,9 @@ def get_conversations(query, limit, conversations=[], dupe_list=[], count=0):
                 })
         current_conversations.append(conversation)
         conversation_count += 1
-    print('{0}/{1} conversations processed'
-          .format(conversation_count, limit), end='\r')
+        print('{0}/{1} conversations processed'
+              .format(conversation_count, limit), end='\r')
+
     if conversation_count < limit:
         last_doc = query_results[-1]
         return get_conversations(
