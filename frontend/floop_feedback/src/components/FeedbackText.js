@@ -3,7 +3,7 @@ function FeedbackText ({feedback, setFeedback, setEmpty}) {
     return (
     <div>
       <div className="field">
-        <label style={{fontSize:'20px'}}>Please enter a comment</label>
+        <label style={{fontSize:'20px'}}>Please enter a new comment:</label>
         <div>
           <textarea
             type ="text"
