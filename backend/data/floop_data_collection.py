@@ -51,11 +51,13 @@ def upload_s3(json):
         print("Success! Result of put operation was HTTP Status Code " + str(extracted_status_code))
 
 
-def initalize_connection(cert_path):
+def initalize_connection(cert_path, doc_count=BATCH_LIMIT):
     cred_obj = firebase_admin.credentials.Certificate(cert_path)
     # initialize default app for firebase
     firebase_admin.initialize_app(cred_obj)
     db = firestore.client()
+
+    limit = BATCH_LIMIT if doc_count > BATCH_LIMIT else doc_count
     # exclude certain types of comment, on Floop's suggestion
     return db\
         .collection(u'Databases/Dev_Database/Conversations')\
@@ -66,16 +68,16 @@ def initalize_connection(cert_path):
                 'Freeform',
                 'Freeform Comment',
                 '', ' '])\
-        .limit(BATCH_LIMIT)
+        .limit(limit)
 
 
-def get_data(conversation_query, limit, conversations=[], count=0):
+def get_conversations(query, limit, conversations=[], dupe_list=[], count=0):
     # descend into the tree of document -> collection -> document and
     # pull out salient text
     current_conversations = conversations
     conversation_count = count
-    dupe_list = []
-    query_results = conversation_query.get()
+    current_dupe_list = dupe_list
+    query_results = query.get()
     for convo_doc in query_results:
         if conversation_count == limit:
             break
@@ -92,12 +94,12 @@ def get_data(conversation_query, limit, conversations=[], count=0):
         top_doc_text = top_doc._data["Text"]
 
         # ignore this conversation if top message is not unique
-        if top_doc_text in dupe_list:
+        if top_doc_text in current_dupe_list:
             continue
 
         conversation = []
 
-        dupe_list.append(top_doc_text)
+        current_dupe_list.append(top_doc_text)
         for message_doc in all_messages:
             message_data = message_doc.to_dict()
             sender_is_student = student_id == message_data["Sender_ID"]
@@ -110,10 +112,11 @@ def get_data(conversation_query, limit, conversations=[], count=0):
         conversation_count += 1
     if conversation_count < limit:
         last_doc = query_results[len(query_results) - 1]
-        return get_data(
-            conversation_query.start_after(last_doc),
+        return get_conversations(
+            query.start_after(last_doc),
             limit,
             current_conversations,
+            current_dupe_list,
             conversation_count
         )
     return current_conversations
@@ -121,7 +124,10 @@ def get_data(conversation_query, limit, conversations=[], count=0):
 
 if __name__ == '__main__':
     cert_path = sys.argv[1] if len(sys.argv) > 1 else get_credentials()
-    data = get_data(initalize_connection(cert_path), 20)
+    doc_limit = 100
+    query = initalize_connection(cert_path, doc_limit)
+    data = get_conversations(query, doc_limit)
+    print('total convos', len(data))
 
     # upload_s3(json.dumps(conversations))
     with open('floop_data.json', 'w') as f:
