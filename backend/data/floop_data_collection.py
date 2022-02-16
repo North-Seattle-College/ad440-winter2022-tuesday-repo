@@ -69,13 +69,17 @@ def initalize_connection(cert_path):
         .limit(BATCH_LIMIT)
 
 
-def get_data(conversation_query):
+def get_data(conversation_query, limit, conversations=[], count=0):
     # descend into the tree of document -> collection -> document and
     # pull out salient text
-    conversations = []
-    conversation_count = 0
+    current_conversations = conversations
+    conversation_count = count
     dupe_list = []
-    for convo_doc in conversation_query.stream():
+    query_results = conversation_query.get()
+    for convo_doc in query_results:
+        if conversation_count == limit:
+            break
+
         convo_data = convo_doc.to_dict()
         student_id = convo_data['Submission_Owner']
 
@@ -102,14 +106,22 @@ def get_data(conversation_query):
                 "Text": message_data["Text"],
                 "Sender_Type": sender_type
                 })
-        conversations.append(conversation)
+        current_conversations.append(conversation)
         conversation_count += 1
-    return conversations
+    if conversation_count < limit:
+        last_doc = query_results[len(query_results) - 1]
+        return get_data(
+            conversation_query.start_after(last_doc),
+            limit,
+            current_conversations,
+            conversation_count
+        )
+    return current_conversations
 
 
 if __name__ == '__main__':
     cert_path = sys.argv[1] if len(sys.argv) > 1 else get_credentials()
-    data = get_data(initalize_connection(cert_path))
+    data = get_data(initalize_connection(cert_path), 20)
 
     # upload_s3(json.dumps(conversations))
     with open('floop_data.json', 'w') as f:
