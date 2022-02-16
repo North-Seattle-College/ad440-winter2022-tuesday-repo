@@ -7,6 +7,8 @@ from datetime import datetime
 from firebase_admin import firestore
 from os.path import exists
 
+BATCH_LIMIT = 10
+
 
 def get_credentials():
     cert_path = input('enter path to cert file: ')
@@ -64,18 +66,16 @@ def initalize_connection(cert_path):
                 'Freeform',
                 'Freeform Comment',
                 '', ' '])\
-        .limit(10).stream()
+        .limit(BATCH_LIMIT)
 
 
-def get_data():
+def get_data(conversation_query):
     # descend into the tree of document -> collection -> document and
     # pull out salient text
     conversations = []
     conversation_count = 0
     dupe_list = []
-    cert_path = sys.argv[1] if len(sys.argv) > 1 else get_credentials()
-    conversation_documents = initalize_connection(cert_path)
-    for convo_doc in conversation_documents:
+    for convo_doc in conversation_query.stream():
         convo_data = convo_doc.to_dict()
         student_id = convo_data['Submission_Owner']
 
@@ -108,7 +108,8 @@ def get_data():
 
 
 if __name__ == '__main__':
-    data = get_data()
+    cert_path = sys.argv[1] if len(sys.argv) > 1 else get_credentials()
+    data = get_data(initalize_connection(cert_path))
 
     # upload_s3(json.dumps(conversations))
     with open('floop_data.json', 'w') as f:
