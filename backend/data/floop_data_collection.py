@@ -64,22 +64,52 @@ def initalize_connection(cert_path):
                 'Freeform',
                 'Freeform Comment',
                 '', ' '])\
-        .limit(1000).stream()
+        .limit(10).stream()
 
 
-# descend into the tree of document -> collection -> document and
-# pull out salient text
-if __name__ == '__main__':
-    arr = []
+def get_data():
+    # descend into the tree of document -> collection -> document and
+    # pull out salient text
+    conversations = []
+    conversation_count = 0
+    dupe_list = []
     cert_path = sys.argv[1] if len(sys.argv) > 1 else get_credentials()
     conversation_documents = initalize_connection(cert_path)
     for convo_doc in conversation_documents:
+        convo_data = convo_doc.to_dict()
+        student_id = convo_data['Submission_Owner']
+
         all_messages = convo_doc.reference.collection('Messages')\
             .order_by(u'Date_Submitted').get()
         if not all_messages:
             continue
-        message_doc = all_messages[0]
-        arr.append(message_doc._data["Text"])
 
-    de_dup_list = set(arr)
-    upload_s3(json.dumps(list(de_dup_list)))
+        top_doc = all_messages[0]
+        top_doc_text = top_doc._data["Text"]
+
+        # ignore this conversation if top message is not unique
+        if top_doc_text in dupe_list:
+            continue
+
+        conversation = []
+
+        dupe_list.append(top_doc_text)
+        for message_doc in all_messages:
+            message_data = message_doc.to_dict()
+            sender_is_student = student_id == message_data["Sender_ID"]
+            sender_type = "Student" if sender_is_student else "Teacher"
+            conversation.append({
+                "Text": message_data["Text"],
+                "Sender_Type": sender_type
+                })
+        conversations.append(conversation)
+        conversation_count += 1
+    return conversations
+
+
+if __name__ == '__main__':
+    data = get_data()
+
+    # upload_s3(json.dumps(conversations))
+    with open('floop_data.json', 'w') as f:
+        json.dump(data, f)
