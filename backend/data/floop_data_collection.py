@@ -1,13 +1,14 @@
-import sys
 import firebase_admin
 import re
 import boto3
 import json
 from datetime import datetime
 from firebase_admin import firestore
+import argparse
 from os.path import exists
 
-BATCH_LIMIT = 10
+BATCH_LIMIT = 500
+DEFAULT_DOC_LIMIT = 1000
 
 
 def get_credentials():
@@ -18,9 +19,8 @@ def get_credentials():
     return cert_path
 
 
-def connect_s3():
-    key_id = sys.argv[2] if len(sys.argv) > 2 else input(
-        "Enter your AWS access key id: ")
+def connect_s3(key, secret):
+    key_id = key if key else input("Enter your AWS access key id: ")
     '''
     we know what a secret access key ID should look like but not what
     the key itself should look like.
@@ -30,14 +30,14 @@ def connect_s3():
     while not re.match("\w{16,128}", key_id):
         print("Key in incorrect format, please try again")
         key_id = input("re-enter your key: ")
-    secret_key = sys.argv[3] if len(sys.argv) > 3 else input(
+    secret_key = secret if secret else input(
         "enter your AWS secret access key: ")
     return boto3.Session(
         aws_access_key_id=key_id, aws_secret_access_key=secret_key)
 
 
-def upload_s3(json):
-    s3_session = connect_s3().resource('s3')
+def upload_s3(json, key, secret):
+    s3_session = connect_s3(key, secret).resource('s3')
     time = datetime.now().strftime("%m-%d-%Y-%H-%M-%S")
     # add file to bucket with current date and time for posterity
     s3_session_object = s3_session.Object(
@@ -49,6 +49,7 @@ def upload_s3(json):
               " and that the bucket 'floop-dataset' exists in your VPC" + str(extracted_status_code))
     else:
         print("Success! Result of put operation was HTTP Status Code " + str(extracted_status_code))
+    print('all good!')
 
 
 def initalize_connection(cert_path, doc_count=BATCH_LIMIT):
@@ -110,8 +111,10 @@ def get_conversations(query, limit, conversations=[], dupe_list=[], count=0):
                 })
         current_conversations.append(conversation)
         conversation_count += 1
+    print('{0}/{1} conversations processed'
+          .format(conversation_count, limit), end='\r')
     if conversation_count < limit:
-        last_doc = query_results[len(query_results) - 1]
+        last_doc = query_results[-1]
         return get_conversations(
             query.start_after(last_doc),
             limit,
@@ -119,16 +122,29 @@ def get_conversations(query, limit, conversations=[], dupe_list=[], count=0):
             current_dupe_list,
             conversation_count
         )
+    print()
     return current_conversations
 
 
-if __name__ == '__main__':
-    cert_path = sys.argv[1] if len(sys.argv) > 1 else get_credentials()
-    doc_limit = 100
-    query = initalize_connection(cert_path, doc_limit)
-    data = get_conversations(query, doc_limit)
-    print('total convos', len(data))
+def get_script_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--path', type=str, help='path to floop cert file')
+    parser.add_argument('--limit', '-l', type=int,
+                        help='number of conversation docs to query')
+    parser.add_argument('--key', '-k', type=str, help='AWS access key')
+    parser.add_argument('--secret', '-s', type=str, help='AWS secret key')
 
-    # upload_s3(json.dumps(conversations))
-    with open('floop_data.json', 'w') as f:
-        json.dump(data, f)
+    args = parser.parse_args()
+    return args
+
+
+if __name__ == '__main__':
+    args = get_script_args()
+
+    cert_path = args.path if args.path else get_credentials()
+    doc_limit = args.limit if args.limit else DEFAULT_DOC_LIMIT
+    query = initalize_connection(cert_path, doc_limit)
+
+    data = get_conversations(query, doc_limit)
+    upload_s3(json.dumps(data), args.key, args.secret)
+    print('Done')
