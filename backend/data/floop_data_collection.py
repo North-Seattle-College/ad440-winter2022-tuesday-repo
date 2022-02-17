@@ -27,7 +27,7 @@ def connect_s3(key, secret):
     https://docs.aws.amazon.com/STS/latest/APIReference/API_Credentials.html
     '''
 
-    while not re.match("\w{16,128}", key_id):
+    while not re.match("\\w{16,128}", key_id):
         print("Key in incorrect format, please try again")
         key_id = input("re-enter your key: ")
     secret_key = secret if secret else input(
@@ -45,10 +45,15 @@ def upload_s3(json, key, secret):
     result = s3_session_object.put(Body=json)
     extracted_status_code = result["ResponseMetadata"]["HTTPStatusCode"]
     if int(extracted_status_code) >= 400:
-        print("Something went wrong. Please make sure that you are using an active key,"
-              " and that the bucket 'floop-dataset' exists in your VPC" + str(extracted_status_code))
+        print(
+            "Something went wrong. Please make sure that you are using an \
+                active key,"
+            " and that the bucket 'floop-dataset' exists in your VPC" +
+            str(extracted_status_code))
     else:
-        print("Success! Result of put operation was HTTP Status Code " + str(extracted_status_code))
+        print(
+            "Success! Result of put operation was HTTP Status Code " +
+            str(extracted_status_code))
     print('all good!')
 
 
@@ -106,7 +111,7 @@ def get_conversations(query, limit, conversations=[], dupe_list=[], count=0):
             conversation.append({
                 "Text": message_data["Text"],
                 "Sender_Type": sender_type
-                })
+            })
         current_conversations.append(conversation)
         conversation_count += 1
         print('{0}/{1} conversations processed'
@@ -146,4 +151,5 @@ if __name__ == '__main__':
 
     data = get_conversations(query, doc_limit)
     upload_s3(json.dumps(data), args.key, args.secret)
+
     print('Done')
