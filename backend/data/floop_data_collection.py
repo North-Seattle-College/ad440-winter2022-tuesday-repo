@@ -4,6 +4,7 @@ import boto3
 import json
 import argparse
 import scrubadub
+import scrubadub_spacy
 
 from datetime import datetime
 from firebase_admin import firestore
@@ -20,6 +21,7 @@ ENVS = [DEV, STAGING, PROD]
 
 scrubber = scrubadub.Scrubber()
 scrubber.add_detector(scrubadub.detectors.DateOfBirthDetector)
+scrubber.add_detector(scrubadub_spacy.detectors.SpacyEntityDetector)
 
 
 def get_credentials():
