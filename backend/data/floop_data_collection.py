@@ -54,7 +54,6 @@ def upload_s3(json, key, secret):
         print(
             "Success! Result of put operation was HTTP Status Code " +
             str(extracted_status_code))
-    print('all good!')
 
 
 def initalize_connection(cert_path, doc_count=BATCH_LIMIT):
