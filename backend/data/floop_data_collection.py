@@ -68,9 +68,9 @@ def upload_s3(json, key, secret):
 
 
 def get_db_path(env):
-    if env == 'prod':
+    if env == PROD:
         return 'Prod'
-    elif env == 'staging':
+    elif env == STAGING:
         return 'Test'
     else:
         return 'Dev'
