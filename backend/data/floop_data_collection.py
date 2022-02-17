@@ -66,6 +66,7 @@ def upload_s3(json, key, secret):
             "Success! Result of put operation was HTTP Status Code " +
             str(extracted_status_code))
 
+
 def get_db_path(env):
     if env == 'prod':
         return 'Prod'
@@ -83,16 +84,18 @@ def initalize_connection(cert_path, env=DEV, doc_count=BATCH_LIMIT):
 
     limit = BATCH_LIMIT if doc_count > BATCH_LIMIT else doc_count
     # exclude certain types of comment, on Floop's suggestion
-    return db\
-        .collection(u'Databases/{0}_Database/Conversations'.format(get_db_path(env)))\
-        .where('Comment_Preview',
-               'not-in',
-               ['What is your goal for this year?',
-                'Audio Comment',
-                'Freeform',
-                'Freeform Comment',
-                '', ' '])\
-        .limit(limit)
+    return db .collection(
+        u'Databases/{0}_Database/Conversations'.format(
+            get_db_path(env))) .where(
+        'Comment_Preview',
+        'not-in',
+        [
+            'What is your goal for this year?',
+            'Audio Comment',
+            'Freeform',
+            'Freeform Comment',
+            '',
+            ' ']) .limit(limit)
 
 
 def get_conversations(query, limit, conversations=[], dupe_list=[], count=0):
@@ -155,7 +158,12 @@ def get_script_args():
                         help='number of conversation docs to query')
     parser.add_argument('--key', '-k', type=str, help='AWS access key')
     parser.add_argument('--secret', '-s', type=str, help='AWS secret key')
-    parser.add_argument('--env', '-e', type=str, choices=ENVS)
+    parser.add_argument(
+        '--env',
+        '-e',
+        type=str,
+        help='the alias for the firebase project to target',
+        choices=ENVS)
 
     args = parser.parse_args()
     return args
