@@ -85,22 +85,20 @@ def get_conversations(query, limit, conversations=[], dupe_list=[], count=0):
 
         convo_data = convo_doc.to_dict()
         student_id = convo_data['Submission_Owner']
-
-        all_messages = convo_doc.reference.collection('Messages')\
-            .order_by(u'Date_Submitted').get()
-        if not all_messages:
-            continue
-
-        top_doc = all_messages[0]
-        top_doc_text = top_doc._data["Text"]
+        top_doc_text = convo_data["Comment_Preview"].strip()
 
         # ignore this conversation if top message is not unique
         if top_doc_text in current_dupe_list:
             continue
 
+        current_dupe_list.append(top_doc_text)
+        all_messages = convo_doc.reference.collection('Messages')\
+            .order_by(u'Date_Submitted').get()
+        if not all_messages:
+            continue
+
         conversation = []
 
-        current_dupe_list.append(top_doc_text)
         for message_doc in all_messages:
             message_data = message_doc.to_dict()
             sender_is_student = student_id == message_data["Sender_ID"]
