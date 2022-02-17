@@ -2,13 +2,18 @@ import firebase_admin
 import re
 import boto3
 import json
+import argparse
+import scrubadub
+
 from datetime import datetime
 from firebase_admin import firestore
-import argparse
 from os.path import exists
 
 BATCH_LIMIT = 500
 DEFAULT_DOC_LIMIT = 1000
+
+scrubber = scrubadub.Scrubber()
+scrubber.add_detector(scrubadub.detectors.DateOfBirthDetector)
 
 
 def get_credentials():
@@ -108,7 +113,7 @@ def get_conversations(query, limit, conversations=[], dupe_list=[], count=0):
             sender_is_student = student_id == message_data["Sender_ID"]
             sender_type = "Student" if sender_is_student else "Teacher"
             conversation.append({
-                "Text": message_data["Text"],
+                "Text": scrubber.clean(message_data["Text"]),
                 "Sender_Type": sender_type
             })
         current_conversations.append(conversation)
