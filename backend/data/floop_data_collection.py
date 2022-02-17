@@ -165,8 +165,7 @@ def get_script_args():
         help='the alias for the firebase project to target',
         choices=ENVS)
 
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 
 if __name__ == '__main__':
