@@ -1,15 +1,43 @@
 #!/bin/bash
 
-SCRIPT_PATH=$(dirname "$0")
+function validateInitials() {
+  MIN=2
+  MAX=5
 
-# import validateInitials from common.lib
-# shellcheck disable=SC1091
-. "$SCRIPT_PATH/../common.lib"
+  initials=$1
 
-RANDOM_STRING=$(cat /dev/urandom | base64 | tr -dc 'a-z0-9' | fold -w 5 | head -n 1)
-BUCKET_TEMPLATE="$SCRIPT_PATH/makeReactBucket.yml"
+  if [ -z "$initials" ]; then
+    printf '%s\n' "Error: initials can't be empty" >&2
+    return 1
+  elif [[ "${initials}" =~ [^a-zA-Z] ]]; then
+    printf '%s\n' "Error: initials must only contain letters, a-z" >&2
+    return 1
+  elif [[ "${#initials}" < $MIN ]]; then
+    printf '%s\n' "Error: initials must be at least $MIN characters" >&2
+    return 1
+  elif [[ "${#initials}" > $MAX ]]; then
+    printf '%s\n' "Error: initials must be no more than $MAX characters" >&2
+    return 1
+  fi
+  return 0
+}
+
+function validateRegion() {
+  REGIONS=("us-east-2" "us-east-1" "us-west-1" "us-west-2" "af-south-1" "ap-east-1" "ap-southeast-3" "ap-south-1" "ap-northeast-3" "ap-northeast-2" "ap-southeast-1" "ap-southeast-2" "ap-northeast-1" "ca-central-1" "cn-north-1" "cn-northwest-1" "eu-central-1" "eu-west-1" "eu-west-2" "eu-south-1" "eu-west-3" "eu-north-1" "me-south-1" "sa-east-1")
+  region=$1
+
+  if [[ " ${REGIONS[*]} " =~ ${region} ]]; then
+    return 0
+  fi
+  printf '%s\n\n' "Error: $region is not a valid region." >&2
+  printf '%s\n' "region must be one of the following: ${REGIONS[*]}" >&2
+  return 1
+}
+
+OPENSSL_STRING=$(openssl rand -hex 3)
+RANDOM_STRING=${OPENSSL_STRING:0:5}
+BUCKET_TEMPLATE=".github/scripts/makeReactBucket.yml"
 INITIALS_PROMPT="What are your initials? ('q' to quit)"
-
 initials="$1"
 region="$2"
 skipPrompt=false
@@ -78,4 +106,4 @@ while :; do
   break
 done
 
-export BUCKET_NAME=$bucketName
+echo "BUCKET_NAME=$bucketName" >> "$GITHUB_ENV"
