@@ -2,7 +2,7 @@ Parameters:
   LambdaName: 
     Description: Unique name of your Lambda function.
     Type: String
-    
+  
 Resources:
   makeLambdaFunction:
     Type: AWS::Lambda::Function
@@ -11,5 +11,4 @@ Resources:
       Role: arn:aws:iam::061431082068:role/Lambda_Role
       Runtime: nodejs14.x
       Handler: index.handler
-      
           

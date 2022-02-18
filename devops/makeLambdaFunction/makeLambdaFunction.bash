@@ -43,7 +43,8 @@ while :; do
     break
   fi
 
-    fileName="index.zip"
+    # folderName="./backend/data/simpleLambda"
+
     # converts initials to lowercase and remove spaces
     formattedInitials="$(echo "${initials}" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
     todayDate=$(date +'%Y%m%d')
@@ -53,14 +54,14 @@ while :; do
     lambdaName=$uniqueName-lambda
     bucketName=$uniqueName-bucket
     stackName=$uniqueName-stack
-    lambdaTemplate="$SCRIPT_PATH/makeLambdaFunction.yml"
+    lambdaTemplate="./backend/simpleLambda/makeLambdaFunction.yml"
 
     
 
     if [ "$skipPrompt" = false ]; then
     # show user name of bucket and stack, get confirmation to create resources
     printf "%s\n" "Your S3 bucket, Lambda function and CloudFormation stack will be named as follows:" \
-            "file name: $fileName" \
+            "folder name: $folderName" \
             "bucket: $bucketName" \
             "lambda: $lambdaName" \
             "stack: $stackName" \
@@ -84,11 +85,11 @@ while :; do
 
       printf '%s\n' "aws cloudformation package --template-file $lambdaTemplate --s3-bucket $bucketName --output-template-file packagedTemplate.yml"
       # uploads the code file to the S3 bucket and returns a template file with the bucket name
-      aws cloudformation package --template-file $lambdaTemplate --s3-bucket $bucketName --output-template-file packagedTemplate.yml
+      aws cloudformation package --template-file $lambdaTemplate --s3-bucket $bucketName --output-template-file ./devops/makeLambdaFunction/packagedTemplate.yml
       
       printf '%s\n' "aws cloudformation deploy --region $region --template-file packagedTemplate.yml --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM"
       # deploys the stack
-      aws cloudformation deploy --region $region --template-file packagedTemplate.yml --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM
+      aws cloudformation deploy --region $region --template-file ./devops/makeLambdaFunction/packagedTemplate.yml --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM
       
       printf '%s\n' "aws s3 rm s3://$bucketName --recursive"
       # empties the S3 bucket
