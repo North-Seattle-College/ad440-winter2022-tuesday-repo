@@ -1,41 +1,49 @@
-#!/bin/sh
-INITIALS_PROMPT="Please enter your first and last initial (or 'q' to quit)"
-NUM=2
+#!/bin/bash
 
-while :
-  do
-    # get and validate user initials
-    printf "%s\n" "$INITIALS_PROMPT" 
-    while read initials && [ "$initials" != "q" ];
-      do
-        # checks to see if string is null or has zero length
-        if [ -z "$initials" ]; then
-          printf '%s\n' "Error: initials can't be empty" 
-        # checks to see if the string matches the requested pattern
-        elif [[ "${initials}" =~ [^a-zA-Z] ]]; then
-          printf '%s\n' "Error: initials must only contain letters, a-z"
-        elif [[ "${#initials}" != $NUM ]]; then
-          printf '%s\n' "Error: initials must be $NUM characters"
-        else
-          break
-        fi
-          printf "%s\n" "$INITIALS_PROMPT" 
-      done
+SCRIPT_PATH=$(dirname "$0")
 
-    if [ "$initials" == "q" ]; then
-      printf '%s\n' "Done"
+# import validateInitials from common.lib
+# shellcheck disable=SC1091
+. "$SCRIPT_PATH/../common.lib"
+
+INITIALS_PROMPT="What are your initials? ('q' to quit)"
+
+initials="$1"
+region="$2"
+skipPrompt=false
+
+while :; do
+  # get and validate user initials if not passed as arg
+  if [[ -z "$initials" ]]; then
+    printf "%s\n" "$INITIALS_PROMPT" >&1
+    printf "%s" "> " >&1
+    while read -r initials && [ "$initials" != "q" ]; do
+      if validateInitials "$initials"; then
+        region="us-west-2"
+        break
+      fi
+      printf "%s\n" "$INITIALS_PROMPT" >&1
+      printf "%s" "> " >&1
+    done
+  elif validateInitials "$initials"; then
+    if [[ -z "$region" ]]; then
+      region="us-west-2"
+    elif ! validateRegion "$region"; then
       break
     fi
 
+    skipPrompt=true
+    answer=y
+  else
+    break
+  fi
 
+  if [[ "$initials" == "q" ]]; then
+    printf '%s\n' "Done" >&1
+    break
+  fi
 
-<<<<<<< HEAD
     # folderName="./backend/data/simpleLambda"
-=======
-    fileName="index.zip"
-    regionName="us-west-2"
-
->>>>>>> parent of 3a9882c (connects common.lib to makeLambdaFunction.bash)
 
     # converts initials to lowercase and remove spaces
     formattedInitials="$(echo "${initials}" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
@@ -46,19 +54,35 @@ while :
     lambdaName=$uniqueName-lambda
     bucketName=$uniqueName-bucket
     stackName=$uniqueName-stack
-<<<<<<< HEAD
     lambdaTemplate="./backend/simpleLambda/makeLambdaFunction.yml"
-=======
->>>>>>> parent of 3a9882c (connects common.lib to makeLambdaFunction.bash)
 
+    
+
+    if [ "$skipPrompt" = false ]; then
+    # show user name of bucket and stack, get confirmation to create resources
     printf "%s\n" "Your S3 bucket, Lambda function and CloudFormation stack will be named as follows:" \
             "folder name: $folderName" \
             "bucket: $bucketName" \
             "lambda: $lambdaName" \
             "stack: $stackName" \
             "Create S3 bucket, Lambda function and CloudFormation stack? (y/n)" 
+    printf "%s" "> " >&1
+    while read -r answer && [ "$answer" != "q" ]; do
+      if [ "${answer:0:1}" == "y" ] || [ "${answer:0:1}" == "n" ]; then
+        break
+      else
+        printf "%s\n" "Create bucket? (y/n)" >&1
+        printf "%s" "> " >&1
+      fi
+    done
+  fi
+    
+    
+    if [ "$answer" == "y" ]; then
+      printf '%s\n' "aws s3 mb s3://$bucketName"
+      # creates the S3 bucket
+      aws s3 mb s3://$bucketName
 
-<<<<<<< HEAD
       printf '%s\n' "aws cloudformation package --template-file $lambdaTemplate --s3-bucket $bucketName --output-template-file packagedTemplate.yml"
       # uploads the code file to the S3 bucket and returns a template file with the bucket name
       aws cloudformation package --template-file $lambdaTemplate --s3-bucket $bucketName --output-template-file ./devops/makeLambdaFunction/packagedTemplate.yml
@@ -70,40 +94,17 @@ while :
       printf '%s\n' "aws s3 rm s3://$bucketName --recursive"
       # empties the S3 bucket
       aws s3 rm s3://$bucketName --recursive
-=======
-    lambdaTemplate="./makeLambdaFunction.yml"
-    while read answer && [ "$answer" != "q" ];
-      do
-        if [ "$answer" == "y" ]; then
-          printf '%s\n' "aws s3 mb s3://$bucketName"
-          # creates the S3 bucket
-          aws s3 mb s3://$bucketName
->>>>>>> parent of 3a9882c (connects common.lib to makeLambdaFunction.bash)
 
-          printf '%s\n' "aws cloudformation package --template-file $lambdaTemplate --s3-bucket $bucketName --output-template-file packagedTemplate.yml"
-          # uploads the code file to the S3 bucket and returns a template file with the bucket name
-          aws cloudformation package --template-file $lambdaTemplate --s3-bucket $bucketName --output-template-file packagedTemplate.yml
-          
-          printf '%s\n' "aws cloudformation deploy --template-file packagedTemplate.yml --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM"
-          # deploys the stack
-          aws cloudformation deploy --template-file packagedTemplate.yml --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM
-         
-          printf '%s\n' "aws s3 rm s3://$bucketName --recursive"
-          # empties the S3 bucket
-          aws s3 rm s3://$bucketName --recursive
+      printf '%s\n' "aws s3api delete-bucket --bucket $bucketName --region $region" 
+      # deletes the S3 bucket
+      aws s3api delete-bucket --bucket $bucketName --region $region
 
-          printf '%s\n' "aws s3api delete-bucket --bucket $bucketName --region $regionName" 
-          # deletes the S3 bucket
-          aws s3api delete-bucket --bucket $bucketName --region $regionName
-
-          break
-        elif [ "$answer" == "n" ]; then
-          break
-        else
-          printf "%s\n" "Create lambda? (y/n)"
-        fi
-      done
-    printf '%s\n' "Done" 
-    break
-  done 
+      break
+    elif [ "$answer" == "n" ]; then
+      break
+    else
+      printf "%s\n" "Create lambda? (y/n)"
+    fi
+  printf '%s\n' "Done" 
+done 
 
