@@ -1,0 +1,48 @@
+swagger: "2.0"
+info:
+  description: AI feedback coach component API
+  version: "1.0"
+  title: AI Feedback coach
+  
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  
+  #host and basePath will change to connect to Lambda. Currently connected to mock server
+host: e2f2c78f-bccd-4f46-a7e8-ee32fbc9b40b.mock.pstmn.io
+basePath: /
+
+#Removed get Request and seen property.
+schemes:
+- https
+paths:
+  /feedback:
+    post:
+      summary: adds feedback message
+      description: Adds a feedback message to assignment
+      operationId: addFeedback
+      parameters:
+      - in: body
+        name: feedbackMessage
+        required: true
+        schema:
+          example:
+            id: 60723745-cc8a-49d8-b5e8-a08cef1195aa
+            message: Good job :)
+          $ref: '#/definitions/Feedback'
+      responses:
+        "201":
+          description: Feedback posted successfully
+        "400":
+          description: invalid input
+definitions:
+  Feedback:
+    type: object
+    required:
+    - message
+    properties:
+      id:
+        type: string
+        format: uuid
+      message:
+        type: string
