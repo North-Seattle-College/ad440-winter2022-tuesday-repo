@@ -2,6 +2,11 @@ AWSTemplateFormatVersion: '2010-09-09'
 
 Description: AWS API Gateway with a Mock Integration
 
+Parameters: 
+  APIName: 
+    Description: Unique name of your Mock API.
+    Type: String
+
 Resources:
 
   ApiGatewayRestApi:
@@ -12,7 +17,8 @@ Resources:
       EndpointConfiguration:
         Types:
           - REGIONAL
-      Name: mock-api
+      Name: !Ref APIName  
+
 
   ApiGatewayResource:
     Type: AWS::ApiGateway::Resource

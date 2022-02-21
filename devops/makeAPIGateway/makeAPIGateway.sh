@@ -31,10 +31,10 @@ while :
     # converts initials to lowercase and remove spaces
     formattedInitials="$(echo "${initials}" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
     todayDate=$(date +'%Y%m%d')
-    # generates a random string https://unix.stackexchange.com/questions/230673/how-to-generate-a-random-string
-    randomString=$(cat /dev/urandom | base64 | tr -dc 'a-z0-9' | fold -w 5 | head -n 1) 
-    uniqueName=$formattedInitials-$randomString-$todayDate
-    lambdaName=$uniqueName-api
+    OPENSSL_STRING=$(openssl rand -hex 3)
+    RANDOM_STRING=${OPENSSL_STRING:0:5}
+    uniqueName=$formattedInitials-$RANDOM_STRING-$todayDate
+    APIName=$uniqueName-mockapi
     stackName=$uniqueName-stack
 
     printf "%s\n" "Your API and stack will be named as follows:" \
@@ -46,8 +46,8 @@ while :
     while read answer && [ "$answer" != "q" ];
       do
         if [ "$answer" == "y" ]; then
-          printf '%s\n' "aws cloudformation deploy --template-file $apiTemplate --stack-name $stackName "
-          aws cloudformation deploy --template-file $apiTemplate --stack-name $stackName 
+          printf '%s\n' "aws cloudformation deploy --template-file $apiTemplate --stack-name $stackName --parameter-overrrides APIName=$APIName"
+          aws cloudformation deploy --template-file $apiTemplate --stack-name $stackName --parameter-overrides APIName=$APIName
           break
         elif [ "$answer" == "n" ]; then
           break
