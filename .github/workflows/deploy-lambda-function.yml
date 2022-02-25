@@ -4,6 +4,7 @@ on:
     branches:  
     - development
     - ab-42-integrateLambda
+    - kj-ab-42-integrateLambda
  
 env: 
   GITHUB_ACTOR: ${GITHUB_ACTOR}
