@@ -8,16 +8,16 @@ initials=$1
      # break
     #fi
     
-    # converts initials to lowercase and remove spaces
-    formattedInitials="$(echo "${initials}" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
-    todayDate=$(date +'%Y%m%d')
-    OPENSSL_STRING=$(openssl rand -hex 3)
-    RANDOM_STRING=${OPENSSL_STRING:0:5}
-    uniqueName=$formattedInitials-$RANDOM_STRING-$todayDate
-    lambdaName=$uniqueName-lambda
-    stackName=$uniqueName-stack
-    initials="$1"
-    answer=y
+  # converts initials to lowercase and remove spaces
+  formattedInitials="$(echo "${initials}" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
+  todayDate=$(date +'%Y%m%d')
+  OPENSSL_STRING=$(openssl rand -hex 3)
+  RANDOM_STRING=${OPENSSL_STRING:0:5}
+  uniqueName=$formattedInitials-$RANDOM_STRING-$todayDate
+  lambdaName=$uniqueName-lambda
+  stackName=$uniqueName-stack
+  initials="$1"
+  answer=y
 
     printf "%s\n" "Your lambda function and stack will be named as follows:" \
             "lambda: $lambdaName" \
@@ -40,8 +40,6 @@ initials=$1
           printf "%s\n" "Create lambda? (y/n)"
         fi
       done
-    printf '%s\n' "Done" 
-    break
-  done 
+    printf '%s\n' "Done"  
 
 echo "FUNCTION_NAME=$lambdaName" >> "$GITHUB_ENV"
