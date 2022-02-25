@@ -3,26 +3,6 @@ INITIALS_PROMPT="Please enter your first and last initial (or 'q' to quit)"
 NUM=2
 initials=$1
 
-while :
-  do
-    # get and validate user initials
-    printf "%s\n" "$INITIALS_PROMPT" 
-    while read initials && [ "$initials" != "q" ];
-      do
-        # checks to see if string is null or has zero length
-        if [ -z "$initials" ]; then
-          printf '%s\n' "Error: initials can't be empty" 
-        # checks to see if the string matches the requested pattern
-        elif [[ "${initials}" =~ [^a-zA-Z] ]]; then
-          printf '%s\n' "Error: initials must only contain letters, a-z"
-        elif [[ "${#initials}" != $NUM ]]; then
-          printf '%s\n' "Error: initials must be $NUM characters"
-        else
-          break
-        fi
-          printf "%s\n" "$INITIALS_PROMPT" 
-      done
-
     #if [ "$initials" == "q" ]; then
     #  printf '%s\n' "Done"
      # break
