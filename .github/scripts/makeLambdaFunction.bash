@@ -26,20 +26,7 @@ initials=$1
 
     lambdaTemplate=".github/scripts/makeLambdaFunction.yml"
 
-    aws cloudformation deploy --region us-west-2 --template-file $lambdaTemplate --stack-name 'tempName' --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM
-   
-    while read answer && [ "$answer" != "q" ];
-      do
-        if [ "$answer" == "y" ]; then
-          printf '%s\n' "aws cloudformation deploy --template-file $lambdaTemplate --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM"
-          aws cloudformation deploy --template-file $lambdaTemplate --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM
-          break
-        elif [ "$answer" == "n" ]; then
-          break
-        else
-          printf "%s\n" "Create lambda? (y/n)"
-        fi
-      done
-    printf '%s\n' "Done"  
+    aws cloudformation deploy --region us-west-2 --template-file $lambdaTemplate --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM
+    printf '%s\n' "aws cloudformation deploy --template-file $lambdaTemplate --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM"
 
 echo "FUNCTION_NAME=$lambdaName" >> "$GITHUB_ENV"

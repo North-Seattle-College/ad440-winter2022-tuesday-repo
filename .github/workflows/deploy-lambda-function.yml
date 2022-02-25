@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set env
-        run: echo "ACTOR_INITIALS=$(echo $GITHUB_ACTOR | cut -c 1-4)" >> $GITHUB_ENV
+        run: echo "ACTOR_INITIALS=$(echo $GITHUB_ACTOR | cut -c 1-2)" >> $GITHUB_ENV
       - name: Show Initials
         run: echo $"{{env.ACTOR_INITIALS}}"
       - uses: actions/checkout@v2  
