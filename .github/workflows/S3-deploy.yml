@@ -43,7 +43,7 @@ jobs:
       - run: . ./.github/scripts/makeReactBucket.bash ${{ env.ACTOR_INITIALS }} us-west-2
         shell: bash
       - run: |
-          echo "${{ env.BUCKET_NAME }}"
+          echo "http://${{ env.BUCKET_NAME }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com"
       - name: Deploy app build to S3 bucket
         working-directory: ./frontend/floop_feedback
         run: aws s3 sync ./build s3://${{ env.BUCKET_NAME }}
