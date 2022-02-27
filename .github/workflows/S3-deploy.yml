@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - "development"
-      - "s3-deploy-github-action"
-      - "test-action"
+      - "mfTest"
+      
   pull_request:
     branches:
       - "development"
