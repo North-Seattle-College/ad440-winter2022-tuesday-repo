@@ -5,7 +5,7 @@ on:
     branches:
       - "development"
       - "mfTest"
-      
+
   pull_request:
     branches:
       - "development"
