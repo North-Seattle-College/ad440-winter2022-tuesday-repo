@@ -2,11 +2,6 @@
 INITIALS_PROMPT="Please enter your first and last initial (or 'q' to quit)"
 NUM=2
 initials=$1
-
-    #if [ "$initials" == "q" ]; then
-    #  printf '%s\n' "Done"
-     # break
-    #fi
     
   # converts initials to lowercase and remove spaces
   formattedInitials="$(echo "${initials}" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
