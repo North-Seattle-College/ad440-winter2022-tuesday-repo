@@ -11,7 +11,6 @@ function SubmitButton({empty, feedback, setResponse, setError}) {
     fetch('https://9u4xt4nqr1.execute-api.us-west-2.amazonaws.com/default/test', requestConfig)
       .then(response => {
         if(!response.ok) {
-          setError('Network response not ok');
         }
         return response.json();
       })
