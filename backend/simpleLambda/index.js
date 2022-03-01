@@ -5,7 +5,6 @@ const dynamo = new AWS.DynamoDB.DocumentClient();
 exports.handler = async (event, context) => {
     let body;
     let statusCode=200;
-    console.log(event)
     const headers = {
         "Content-Type": "application/json"
     };
@@ -53,7 +52,6 @@ exports.handler = async (event, context) => {
                 newSentence = "";
             }
         }
-        console.log(sentenceArray);
         // return JSON array of sentences
         body = sentenceArray;
         
