@@ -8,7 +8,8 @@ function SubmitButton({empty, feedback, setResponse, setError}) {
       body: JSON.stringify({ feedback })
     };
     e.preventDefault();
-    fetch('https://9u4xt4nqr1.execute-api.us-west-2.amazonaws.com/default/test', requestConfig)
+    fetch('https://d5z72uewg7.execute-api.us-west-2.amazonaws.com/test/kj-6exxg-20220222-lambda', requestConfig)
+    //fetch('https://9u4xt4nqr1.execute-api.us-west-2.amazonaws.com/default/test', requestConfig)
       .then(response => {
         if(!response.ok) {
           setError('Network response not ok');
