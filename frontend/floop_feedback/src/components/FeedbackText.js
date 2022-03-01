@@ -17,6 +17,7 @@ function FeedbackText ({feedback, setFeedback, setEmpty}) {
                   setFeedback(e.target.value)
                   setEmpty(true)
               }
+              console.log(feedback)
             }}
           />
         </div>

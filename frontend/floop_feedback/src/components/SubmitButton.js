@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 function SubmitButton({empty, feedback, setResponse, setError}) {
   const inputSubmit = e => {
     const requestConfig = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ feedback })
+      body: JSON.stringify({ feedback }),
+      mode: 'no-cors'
     };
+    console.log(requestConfig, typeof feedback);
     e.preventDefault();
     fetch('https://d5z72uewg7.execute-api.us-west-2.amazonaws.com/test/kj-6exxg-20220222-lambda', requestConfig)
-    //fetch('https://9u4xt4nqr1.execute-api.us-west-2.amazonaws.com/default/test', requestConfig)
       .then(response => {
+        console.log(response);
         if(!response.ok) {
           setError('Network response not ok');
         }
