@@ -1,51 +1,52 @@
-const messafe='null'
+exports.handler = async (event) => {
+  console.log("event: " + JSON.stringify(event));
+  console.log("----- lambda start");
+  let feedback = "";
+  // let Id = 1;
 
-exports.handler = async (event, context, callback) => {
-  // TODO implement
-  console.log(event);
-  const response = {
-    metood: "post",
-    statusCode: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(event[body
-      // {
-      //   id: 1,
-      //   name: "TI",
-      //   description: "Hi from Lambda! ID# 1",
-      // },
-      // { id: 2, name: "Kl", description: "Hi from Lambda! ID# 2" },
-    ]),
-    //const message
-    messafe = body["massafe"]
+  let responseCode = 201;
+  console.log("event: " + JSON.stringify(event));
+  console.log("feed: " + JSON.stringify(feedback));
+
+  if (event.body !== "") {
+    let body;
+    try {
+      body = JSON.parse(event.body);
+    } catch (e) {
+      body = { message: "dd" };
+    }
+
+    if (event.feedback === "null" || event.feedback === "undefined")
+      return {
+        statusCode: "400",
+        body: JSON.stringify({ Error: " feed back undefined! or null!" }),
+      };
+    else if (body.feedback === "")
+      return {
+        statusCode: "400",
+        body: JSON.stringify({ Error: "Missing feedback string" }),
+      };
+    else if (!body.feedback)
+      return {
+        statusCode: "406",
+        body: JSON.stringify({ Error: "info not matched" }),
+      };
+    else feedback = body.feedback;
+    // if (body.Id)
+    // Id = body.id;
+  }
+  let FeedBack = `Teacher feed back:  ${feedback}.`;
+
+  let responseBody = {
+    message: FeedBack,
+    // input: event
   };
-  //return response;//let mes= event["hi"];
-exports.handler = async (event, context, callback) => {
-  // TODO implement
-  console.log("----- lambda start")
-  console.log(event);
- 
-   console.log("start if");
-if(event.httpMethod === "post"){
-     console.log(event);
-   return createMessage(event);
- }
- 
-};
-  console.log("createMessage start");
-function createMessage(event) {
-  // body...
- const body = JSON.parse(event.body);
- const response = {
-    
-    statusCode: 201,
-    body:JSON.stringify({
-      message:"succesfuly",
-      details: body
-    })
- };
- return response;
-}
-  callback(null, response);
+
+  let response = {
+    statusCode: responseCode,
+
+    body: JSON.stringify(responseBody),
+  };
+
+  return response;
 };
