@@ -11,14 +11,13 @@ exports.handler = async (event, context) => {
 
     try {
         // break up sentences
-        body = event.feedback;
-        let sentenceArray = [];
         let feedback = event.feedback;
+        let sentenceArray = [];
+        let sentenceObject = {};
         let newSentence = "";
         for (let i = 0; i < feedback.length; i++) {
             newSentence = newSentence + feedback[i];
             if (feedback[i] == "." || feedback[i] == "?" || feedback[i] == "!") {
-                let sentenceObject = {};
                 
                 // add sentence string
                 sentenceObject.sentence = newSentence;
@@ -51,6 +50,13 @@ exports.handler = async (event, context) => {
                 // reset 
                 newSentence = "";
             }
+        }
+        // check if the array is empty
+        if (sentenceArray.length == 0) {
+            sentenceObject.sentence = "No full sentences detected. Sentences must end with punctuation of either a period (.), exclamation point (!), or question mark (?), to be considered full sentences."
+            sentenceObject.type = "No full sentences detected to detect type. Sentences must end with punctuation of either a period (.), exclamation point (!), or question mark (?), to be considered full sentences.";
+            sentenceObject.sentiment = "No full sentences detected to determine sentiment. Sentences must end with punctuation of either a period (.), exclamation point (!), or question mark (?), to be considered full sentences.";
+            sentenceArray.push(sentenceObject);
         }
         // return JSON array of sentences
         body = sentenceArray;
