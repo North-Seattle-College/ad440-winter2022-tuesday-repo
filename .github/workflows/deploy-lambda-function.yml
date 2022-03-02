@@ -29,4 +29,5 @@ jobs:
           echo "${{env.FUNCTION_NAME}}"
       - name: Deploy code to Lambda Function
         run: |
+          zip -j deploy.zip ./* 
           aws lambda update-function-code --function-name=${{env.FUNCTION_NAME}} --zip-file=fileb://deploy.zip
