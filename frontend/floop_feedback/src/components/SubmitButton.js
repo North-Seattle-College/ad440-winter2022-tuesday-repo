@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 function SubmitButton({empty, feedback, setResponse, setError}) {
   const inputSubmit = e => {
@@ -8,7 +8,6 @@ function SubmitButton({empty, feedback, setResponse, setError}) {
       body: JSON.stringify({ feedback }),
       mode: 'no-cors'
     };
-    console.log(requestConfig, typeof feedback);
     e.preventDefault();
     fetch('https://d5z72uewg7.execute-api.us-west-2.amazonaws.com/test/kj-6exxg-20220222-lambda', requestConfig)
       .then(response => {
@@ -22,6 +21,7 @@ function SubmitButton({empty, feedback, setResponse, setError}) {
         setResponse(data);
       })
       .catch(err => { setError(err) });
+      console.log(feedback, requestConfig, typeof feedback);
   }
   return (
     <div>
