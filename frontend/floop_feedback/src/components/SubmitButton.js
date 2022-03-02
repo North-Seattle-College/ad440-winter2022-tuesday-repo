@@ -5,10 +5,10 @@ function SubmitButton({empty, feedback, setResponse, setError}) {
     const requestConfig = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ feedback })
+      body: JSON.stringify({ feedback }),
     };
     e.preventDefault();
-    fetch('https://9u4xt4nqr1.execute-api.us-west-2.amazonaws.com/default/test', requestConfig)
+    fetch('https://d5z72uewg7.execute-api.us-west-2.amazonaws.com/test/kj-6exxg-20220222-lambda', requestConfig)
       .then(response => {
         if(!response.ok) {
         }
