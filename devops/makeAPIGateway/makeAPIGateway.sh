@@ -31,31 +31,30 @@ while :
     # converts initials to lowercase and remove spaces
     formattedInitials="$(echo "${initials}" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
     todayDate=$(date +'%Y%m%d')
-    # generates a random string https://unix.stackexchange.com/questions/230673/how-to-generate-a-random-string
-    randomString=$(cat /dev/urandom | base64 | tr -dc 'a-z0-9' | fold -w 5 | head -n 1) 
-    uniqueName=$formattedInitials-$randomString-$todayDate
-    lambdaName=$uniqueName-lambda
+    OPENSSL_STRING=$(openssl rand -hex 3)
+    RANDOM_STRING=${OPENSSL_STRING:0:5}
+    uniqueName=$formattedInitials-$RANDOM_STRING-$todayDate
+    APIName=$uniqueName-mockapi
     stackName=$uniqueName-stack
 
-    printf "%s\n" "Your lambda function and stack will be named as follows:" \
-            "lambda: $lambdaName" \
+    printf "%s\n" "Your API and stack will be named as follows:" \
+            "api: $lambdaName" \
             "stack: $stackName" \
-            "Create lambda function and stack? (y/n)" 
+            "Create API? (y/n)" 
 
-    lambdaTemplate="./makeLambdaFunction.yml"
+    apiTemplate="./makeAPIGateway.yml"
     while read answer && [ "$answer" != "q" ];
       do
         if [ "$answer" == "y" ]; then
-          printf '%s\n' "aws cloudformation deploy --template-file $lambdaTemplate --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM"
-          aws cloudformation deploy --template-file $lambdaTemplate --stack-name $stackName --parameter-overrides LambdaName=$lambdaName --capabilities CAPABILITY_NAMED_IAM
+          printf '%s\n' "aws cloudformation deploy --template-file $apiTemplate --stack-name $stackName --parameter-overrrides APIName=$APIName"
+          aws cloudformation deploy --template-file $apiTemplate --stack-name $stackName --parameter-overrides APIName=$APIName
           break
         elif [ "$answer" == "n" ]; then
           break
         else
-          printf "%s\n" "Create lambda? (y/n)"
+          printf "%s\n" "Create API? (y/n)"
         fi
       done
     printf '%s\n' "Done" 
     break
   done 
-

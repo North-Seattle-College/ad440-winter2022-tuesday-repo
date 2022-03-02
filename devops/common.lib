@@ -1,0 +1,52 @@
+#!/bin/bash
+
+#################################
+# Validate that a string has the following characteristics:
+#   - At least 2 chars
+#   - No more than 5 chars
+#   - Has no whitespace
+# Globals:
+#   None
+# Arguments:
+#   initials
+#################################
+function validateInitials() {
+  MIN=2
+  MAX=5
+
+  initials=$1
+
+  if [ -z "$initials" ]; then
+    printf '%s\n' "Error: initials can't be empty" >&2
+    return 1
+  elif [[ "${initials}" =~ [^a-zA-Z] ]]; then
+    printf '%s\n' "Error: initials must only contain letters, a-z" >&2
+    return 1
+  elif [[ "${#initials}" < $MIN ]]; then
+    printf '%s\n' "Error: initials must be at least $MIN characters" >&2
+    return 1
+  elif [[ "${#initials}" > $MAX ]]; then
+    printf '%s\n' "Error: initials must be no more than $MAX characters" >&2
+    return 1
+  fi
+  return 0
+}
+
+#################################
+# Validate that an AWS region is one of the regions listed in the REGIONS array
+# Globals:
+#   None
+# Arguments:
+#   region
+#################################
+function validateRegion() {
+  REGIONS=("us-east-2" "us-east-1" "us-west-1" "us-west-2" "af-south-1" "ap-east-1" "ap-southeast-3" "ap-south-1" "ap-northeast-3" "ap-northeast-2" "ap-southeast-1" "ap-southeast-2" "ap-northeast-1" "ca-central-1" "cn-north-1" "cn-northwest-1" "eu-central-1" "eu-west-1" "eu-west-2" "eu-south-1" "eu-west-3" "eu-north-1" "me-south-1" "sa-east-1")
+  region=$1
+
+  if [[ " ${REGIONS[*]} " =~ ${region} ]]; then
+    return 0
+  fi
+  printf '%s\n\n' "Error: $region is not a valid region." >&2
+  printf '%s\n' "region must be one of the following: ${REGIONS[*]}" >&2
+  return 1
+}

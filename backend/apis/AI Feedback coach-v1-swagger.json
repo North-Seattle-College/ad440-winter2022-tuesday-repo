@@ -1,0 +1,51 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "AI feedback coach component API",
+    "version" : "1.0",
+    "title" : "AI Feedback coach"
+  },
+  "host" : "d5z72uewg7.execute-api.us-west-2.amazonaws.com",
+  "basePath" : "/test/kj-6exxg-20220222-lambda",
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/feedback" : {
+      "post" : {
+        "operationId" : "addFeedback",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "Feedback",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Feedback"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "201 response"
+          },
+          "400" : {
+            "description" : "400 response"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Feedback" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid"
+        },
+        "message" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}

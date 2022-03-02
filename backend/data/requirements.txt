@@ -1,0 +1,5 @@
+boto3==1.21.0
+firebase-admin==5.2.0
+argparse==1.4.0
+scrubadub==2.0.0
+scrubadub-spacy==2.0.0
