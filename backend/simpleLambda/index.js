@@ -1,12 +1,8 @@
 exports.handler = async (event) => {
-  console.log("event: " + JSON.stringify(event));
-  console.log("----- lambda start");
-  let feedback = "";
-  // let Id = 1;
 
-  let responseCode = 201;
-  console.log("event: " + JSON.stringify(event));
-  console.log("feed: " + JSON.stringify(feedback));
+ let feedback = "";
+ let responseCode = 201;
+
 
   if (event.body !== "") {
     let body;
@@ -32,9 +28,8 @@ exports.handler = async (event) => {
         body: JSON.stringify({ Error: "info not matched" }),
       };
     else feedback = body.feedback;
-    // if (body.Id)
-    // Id = body.id;
-  }
+   }
+ 
   let FeedBack = `Teacher feed back:  ${feedback}.`;
 
   let responseBody = {
