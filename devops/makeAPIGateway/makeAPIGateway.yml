@@ -1,15 +1,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: AWS API Gateway with a Mock Integration
+Description: AWS API Gateway with a Lambda Integration
 
 Parameters: 
   APIName: 
-    Description: Unique name of your Mock API.
+    Description: Unique name of your Lambda API.
     Type: String
 
 Resources:
-  
-  
   ApiGatewayRestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
@@ -20,32 +18,26 @@ Resources:
           - REGIONAL
       Name: !Ref APIName  
   
-  ApiGatewayResource:
+  ProxyResource:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
       PathPart: 'feedback'
       RestApiId: !Ref ApiGatewayRestApi       
 
-  ApiGatewayMethod:
+  ProxyResourceANY:
     Type: AWS::ApiGateway::Method
     Properties:
       ApiKeyRequired: false
       AuthorizationType: NONE
       HttpMethod: POST
       Integration:
-        ConnectionType: INTERNET
-        Credentials: arn:aws:iam::061431082068:role/service-role/LambdaIntegrationRole
         IntegrationHttpMethod: POST
-        PassthroughBehavior: WHEN_NO_MATCH
-        TimeoutInMillis: 29000
         Type: AWS_PROXY
         Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:061431082068:function:lambda-function/invocations'
-      OperationName: 'lambda'
-      ResourceId: !Ref ApiGatewayResource
+      OperationName: 'feedback'
+      ResourceId: !Ref ProxyResource
       RestApiId: !Ref ApiGatewayRestApi
-
-  
 
   ApiGatewayModel:
     Type: AWS::ApiGateway::Model
@@ -64,13 +56,15 @@ Resources:
 
   ApiGatewayDeployment:
     Type: AWS::ApiGateway::Deployment
-    DependsOn: ApiGatewayMethod
+    DependsOn: ProxyResourceANY
     Properties:
       Description: Lambda API Deployment
       RestApiId: !Ref ApiGatewayRestApi
-
-  
-
-  
-
-  
+      
+  lambdaApiGatewayInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: arn:aws:lambda:us-west-2:061431082068:function:lambda-function
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayRestApi}/*/*/*

@@ -34,7 +34,7 @@ while :
     OPENSSL_STRING=$(openssl rand -hex 3)
     RANDOM_STRING=${OPENSSL_STRING:0:5}
     uniqueName=$formattedInitials-$RANDOM_STRING-$todayDate
-    APIName=$uniqueName-mockapi
+    APIName=$uniqueName-api
     stackName=$uniqueName-stack
 
     printf "%s\n" "Your API and stack will be named as follows:" \
