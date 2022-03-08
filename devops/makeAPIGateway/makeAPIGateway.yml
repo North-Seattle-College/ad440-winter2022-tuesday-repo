@@ -1,63 +1,42 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: AWS API Gateway with a Mock Integration
+Description: AWS API Gateway with a Lambda Integration
 
 Parameters: 
   APIName: 
-    Description: Unique name of your Mock API.
+    Description: Unique name of your Lambda API.
     Type: String
 
 Resources:
-
   ApiGatewayRestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
       ApiKeySourceType: HEADER
-      Description: An API Gateway with a Mock Integration
+      Description: An API Gateway with a Lambda Integration
       EndpointConfiguration:
         Types:
           - REGIONAL
       Name: !Ref APIName  
-
-
-  ApiGatewayResource:
+  
+  ProxyResource:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
-      PathPart: 'mock'
-      RestApiId: !Ref ApiGatewayRestApi
+      PathPart: 'feedback'
+      RestApiId: !Ref ApiGatewayRestApi       
 
-  ApiGatewayMethod:
+  ProxyResourceANY:
     Type: AWS::ApiGateway::Method
     Properties:
       ApiKeyRequired: false
       AuthorizationType: NONE
       HttpMethod: POST
       Integration:
-        ConnectionType: INTERNET
-        IntegrationResponses:
-          - ResponseTemplates:
-              application/json: "{\"message\": \"OK\"}"
-            SelectionPattern: '2\d{2}'
-            StatusCode: 200
-          - ResponseTemplates:
-              application/json: "{\"message\": \"Internal Server Error\"}"
-            SelectionPattern: '5\d{2}'
-            StatusCode: 500
-        PassthroughBehavior: WHEN_NO_TEMPLATES
-        RequestTemplates:
-          application/json: "{\"statusCode\": $input.json('$.statusCode'), \"message\": $input.json('$.message')}"
-        Type: MOCK
-        TimeoutInMillis: 29000
-      MethodResponses:
-        - ResponseModels:
-            application/json: !Ref ApiGatewayModel
-          StatusCode: 200
-        - ResponseModels:
-            application/json: !Ref ApiGatewayModel
-          StatusCode: 500
-      OperationName: 'mock'
-      ResourceId: !Ref ApiGatewayResource
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:061431082068:function:lambda-function/invocations'
+      OperationName: 'feedback'
+      ResourceId: !Ref ProxyResource
       RestApiId: !Ref ApiGatewayRestApi
 
   ApiGatewayModel:
@@ -71,13 +50,21 @@ Resources:
     Type: AWS::ApiGateway::Stage
     Properties:
       DeploymentId: !Ref ApiGatewayDeployment
-      Description: Mock API Stage v0
+      Description: API Feedback Coach Stage v1
       RestApiId: !Ref ApiGatewayRestApi
-      StageName: 'v0'
+      StageName: 'v1'
 
   ApiGatewayDeployment:
     Type: AWS::ApiGateway::Deployment
-    DependsOn: ApiGatewayMethod
+    DependsOn: ProxyResourceANY
     Properties:
-      Description: Mock API Deployment
+      Description: Lambda API Deployment
       RestApiId: !Ref ApiGatewayRestApi
+      
+  lambdaApiGatewayInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: arn:aws:lambda:us-west-2:061431082068:function:lambda-function
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayRestApi}/*/*/*
