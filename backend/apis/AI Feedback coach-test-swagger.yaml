@@ -1,0 +1,35 @@
+---
+swagger: "2.0"
+info:
+  description: "AI feedback coach component API"
+  version: "1.0"
+  title: "AI Feedback coach"
+host: "3yn7xid8xj.execute-api.us-west-2.amazonaws.com"
+basePath: "/test"
+schemes:
+- "https"
+paths:
+  /feedback:
+    post:
+      operationId: "addFeedback"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "Feedback"
+        required: true
+        schema:
+          $ref: "#/definitions/Feedback"
+      responses:
+        "200":
+          description: "200 response"
+        "400":
+          description: "400 response"
+definitions:
+  Feedback:
+    type: "object"
+    properties:
+      feedback:
+        type: "string"
