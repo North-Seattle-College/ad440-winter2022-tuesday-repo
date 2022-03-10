@@ -1,26 +1,33 @@
-name: Deploy Lambda 
-
+name: Create and Deploy Lambda 
 on:  
-  push:   #On Push Event We need to take action
+  push:   
     branches:  
-    - ab-24-pr
     - development
+    - ab-42-integrateLambda
+ 
+env: 
+  GITHUB_ACTOR: ${GITHUB_ACTOR}
 
 jobs:  
   deploy_lambda:
     runs-on: ubuntu-latest
     steps:
-    #Using versioned actions 
-      - uses: actions/checkout@v2  # --> Reference a specific version
+      - name: Set env
+        run: echo "ACTOR_INITIALS=$(echo $GITHUB_ACTOR | cut -c 1-2)" >> $GITHUB_ENV
+      - name: Show Initials
+        run: echo $"{{env.ACTOR_INITIALS}}"
+      - uses: actions/checkout@v2  
       - name: Configure AWS Credentials  
-        uses: aws-actions/configure-aws-credentials@v1 #--> Setup the Credential for the AWS cli
+        uses: aws-actions/configure-aws-credentials@v1 
         with:
-        # Created the Secrets Under the Repo only with These Variables
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2 #only our region 
-      - name: deploy
+          aws-region: us-west-2
+      - run: . ./.github/scripts/makeLambdaFunction.bash ${{env.ACTOR_INITIALS}} us-west-2 #pass parameters
+        shell: bash
+      - run: |
+          echo "${{env.FUNCTION_NAME}}"
+      - name: Deploy code to Lambda Function
         run: |
           zip -j deploy.zip ./* 
-          aws lambda update-function-code --function-name=ab-o7sk3-20220131-lambda --zip-file=fileb://deploy.zip 
-# At last the AWS CLI command to Update the Zip file with existing One (With Correct Function Name)
+          aws lambda update-function-code --function-name=${{env.FUNCTION_NAME}} --zip-file=fileb://deploy.zip
