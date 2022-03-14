@@ -24,7 +24,7 @@ exports.handler = async (event) => {
       };
     else if (!body.feedback)
       return {
-        statusCode: "406",
+        statusCode: "400",
         body: JSON.stringify({ Error: "info not matched" }),
       };
     else feedback = body.feedback;
