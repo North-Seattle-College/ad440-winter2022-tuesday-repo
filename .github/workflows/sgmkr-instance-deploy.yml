@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - "development"
-      - "cn-128-sgmkr-instance-action"
+      - "pt-cn-test"
 
 env: 
   GITHUB_ACTOR: ${GITHUB_ACTOR}
