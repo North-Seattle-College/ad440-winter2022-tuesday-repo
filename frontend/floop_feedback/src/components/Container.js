@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import FeedbackText from './FeedbackText';
 import FeedbackAnalysis from './FeedbackAnalysis';
 import SubmitButton from './SubmitButton';
+import ClearButton from './ClearButton';
 import ErrorMessage from './ErrorMessage';
 import Header from './Header';
 import Footer from './Footer';
@@ -25,6 +26,7 @@ const Container = () => {
                 </div>
                 <div className='Button'>
                     <SubmitButton empty={empty} feedback={feedback} setResponse={setResponse} setError={setError} />
+                    <ClearButton empty={empty} />
                 </div>    
                 <div className='Analysis'>
                     {!error ? <FeedbackAnalysis response={response} /> : <ErrorMessage error={error}/>}

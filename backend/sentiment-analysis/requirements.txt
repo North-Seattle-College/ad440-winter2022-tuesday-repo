@@ -1,0 +1,5 @@
+nltk
+matplot
+sagemaker
+fsspec
+s3fs

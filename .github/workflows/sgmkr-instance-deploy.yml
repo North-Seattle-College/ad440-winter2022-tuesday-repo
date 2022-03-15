@@ -1,0 +1,51 @@
+name: Sagemaker Instance Action 
+
+on:
+  push:
+    branches:
+      - "development"
+      - "cn-128-sgmkr-instance-action"
+
+env: 
+  GITHUB_ACTOR: ${GITHUB_ACTOR}
+      
+jobs:
+  sm_deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [15.x]
+
+    steps:
+      - name: Set env
+        run: echo "ACTOR_INITIALS=$(echo $GITHUB_ACTOR | cut -c 1-4)" >> $GITHUB_ENV
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python environment
+        uses: actions/setup-python@v2.2.1
+    
+      - name: Install requirements
+        run: pip install --requirement requirements.txt
+        working-directory: ./backend/sentiment-analysis
+
+      - name: AWS Deploy
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-west-2
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Run Script
+        run: . ./.github/scripts/makeSgmkrInstance.bash ${{env.ACTOR_INITIALS}} us-west-2
+        shell: bash  
+      
+      - name: Instance Name
+        run: |
+          echo "http://${{ env.INSTANCE_NAME }}.notebook.${{ env.AWS_REGION }}.sagemaker.aws"
+        
+      - name: Display Sentiment Analysis
+        run: python sentiment-analysis-sample.py  
+        working-directory: ./backend/sentiment-analysis
