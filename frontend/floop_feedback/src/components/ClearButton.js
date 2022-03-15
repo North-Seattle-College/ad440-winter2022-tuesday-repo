@@ -4,7 +4,7 @@ function ClearButton({empty}) {
 
     return (
         <div>
-            <button disabled={!empty} onClick={<a href="/"/>}>Clear</button>
+            <button disabled={!empty} onClick="ClearButton({empty})">Clear</button>
         </div>    
     );    
 }
