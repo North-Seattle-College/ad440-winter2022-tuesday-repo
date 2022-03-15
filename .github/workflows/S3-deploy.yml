@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "development"
+      - "pt-cn-test"
       
 env:
   GITHUB_ACTOR: ${GITHUB_ACTOR}
