@@ -25,8 +25,8 @@ const Container = () => {
                     <FeedbackText feedback={feedback} setFeedback={setFeedback} setEmpty={setEmpty} />
                 </div>
                 <div className='Button'>
-                    <SubmitButton empty={empty} feedback={feedback} setResponse={setResponse} setError={setError} />
                     <ClearButton empty={empty} />
+                    <SubmitButton empty={empty} feedback={feedback} setResponse={setResponse} setError={setError} />
                 </div>    
                 <div className='Analysis'>
                     {!error ? <FeedbackAnalysis response={response} /> : <ErrorMessage error={error}/>}
