@@ -29,7 +29,7 @@ const Container = () => {
                     <ClearButton empty={empty} />
                 </div>    
                 <div className='Analysis'>
-                    {!error ? <FeedbackAnalysis response={response.body} /> : <ErrorMessage error={error}/>}
+                    {!error ? <FeedbackAnalysis response={response} /> : <ErrorMessage error={error}/>}
                 </div>
             </form>
             <div className='Footer'>
