@@ -1,6 +1,6 @@
 exports.handler = async (event) => {
   let feedback = "";
-  let responseCode = 201;
+  let responseCode = 200;
 
   if (event.body !== "") {
     let body;
