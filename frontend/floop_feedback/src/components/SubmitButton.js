@@ -8,7 +8,7 @@ function SubmitButton({empty, feedback, setResponse, setError}) {
       body: JSON.stringify({ feedback }),
     };
     e.preventDefault();
-    fetch('https://d5z72uewg7.execute-api.us-west-2.amazonaws.com/test/kj-6exxg-20220222-lambda', requestConfig)
+    fetch('https://d5z72uewg7.execute-api.us-west-2.amazonaws.com/feedback/kj-6exxg-20220222-lambda', requestConfig)
       .then(response => {
         if(!response.ok) {
         }
@@ -16,6 +16,7 @@ function SubmitButton({empty, feedback, setResponse, setError}) {
       })
       .then(data => {
         setResponse(data);
+        console.log(data)
       })
       .catch(err => { setError(err) });
   }
