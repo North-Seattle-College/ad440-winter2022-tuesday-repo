@@ -11,22 +11,27 @@ exports.handler = async (event) => {
     }
 
     feedback = body.feedback;
-    var x = feedback.split(".");
-    //     var sent = [];
-    //     var buf="";
-    //     for (var i = 0; i < feedback.length; i++) {
-    //       buf+= feedback[i];
-    //       if (feedback[i]==".") {
-
-    //           sent.push(buf);
-    //           buf="";
-    //         // x[i] += " ";
-    //       }
-
-    // }
+    // var x= feedback.split(".");
+    var sent = [];
+    var buf = "";
+    for (var i = 0; i < feedback.length; i++) {
+      buf += feedback[i];
+      if (feedback[i] == ".") {
+        sent.push(buf);
+        buf = "";
+        // x[i] += " ";
+      } else if (feedback[i] == "?") {
+        sent.push(buf);
+        buf = "";
+      } else if (feedback[i] == "!") {
+        sent.push(buf);
+        buf = "";
+      }
+    }
+    if (buf.length > 0) sent.push(buf);
   }
 
-  let FeedBack = `${x}.`;
+  let FeedBack = `${sent}.`;
 
   let responseBody = {
     sentence: FeedBack,
