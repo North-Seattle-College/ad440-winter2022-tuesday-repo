@@ -4,17 +4,17 @@ Description: AWS CloudFormation Template To Create a DynamoDB
 Parameters:
   HashKeyElementName:
     Type: String
-    Default: EmployeeId
+    Default: Id
     Description: Hash Key Name
   HashKeyElementType:
     Type: String
     Default: S
     Description: Hash Key Type
 Resources:
-  EmployeeTable:
+  Ad440Dynamo:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: Employee
+      TableName: Ad440Dynamo
       AttributeDefinitions:
         - 
           AttributeName: !Ref HashKeyElementName
@@ -29,4 +29,4 @@ Resources:
 Outputs:
   Employee:
     Description: Table Created using this template.
-    Value: !Ref EmployeeTable
+    Value: !Ref Ad440Dynamo
