@@ -1,6 +1,7 @@
 import React from "react";
 
 function SubmitButton({empty, feedback, setResponse, setError}) {
+  const url = 'https://api.holodium.com/v1/feedback'
   const inputSubmit = e => {
     const requestConfig = {
       method: 'POST',
@@ -8,7 +9,7 @@ function SubmitButton({empty, feedback, setResponse, setError}) {
       body: JSON.stringify({ feedback }),
     };
     e.preventDefault();
-    fetch('https://d5z72uewg7.execute-api.us-west-2.amazonaws.com/test/kj-6exxg-20220222-lambda', requestConfig)
+    fetch(url, requestConfig)
       .then(response => {
         if(!response.ok) {
         }
