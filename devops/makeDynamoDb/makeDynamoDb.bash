@@ -2,6 +2,7 @@
 INITIALS_PROMPT="Please enter your first and last initial (or 'q' to quit)"
 NUM=2
 
+
 while :
   do
     # get and validate user initials
@@ -46,8 +47,8 @@ while :
     while read answer && [ "$answer" != "q" ];
       do
         if [ "$answer" == "y" ]; then
-          printf '%s\n' "aws cloudformation deploy --template-file $databaseTemplate --stack-name $stackName --parameter-overrrides DatabaseName=$databaseName"
-          aws cloudformation deploy --template-file $databaseTemplate --stack-name $stackName --parameter-overrides DatabaseName="new"
+          printf '%s\n' "aws cloudformation deploy --template-file $databaseTemplate --stack-name $stackName --parameter-overrrides DatabaseName=$uniqueName" >&1
+          aws cloudformation deploy --template-file $databaseTemplate --stack-name $stackName --parameter-overrides DatabaseName=$uniqueName
           break
         elif [ "$answer" == "n" ]; then
           break
