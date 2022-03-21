@@ -2,7 +2,7 @@ exports.handler = async (event) => {
   console.log("event: " + JSON.stringify(event));
   console.log("----- lambda start");
   let feedBack = "Good Job!";
-  // let Id = 1;
+
 
   let responseCode = 201;
   console.log("event: " + JSON.stringify(event));
@@ -14,8 +14,6 @@ exports.handler = async (event) => {
         statusCode: 400,
       };
     else feedBack = body.feedBack;
-    // if (body.Id)
-    // Id = body.id;
   }
 
   let FeedBack = `Teacher feed back:  ${feedBack}.`;
