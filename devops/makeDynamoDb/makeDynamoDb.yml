@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: AWS CloudFormation Template To Create a DynamoDB
+
+Parameters:
+  DatabaseName:
+    Type: String
+    Description: Table name, can't be empty
+  HashKeyElementName:
+    Type: String
+    Default: Id
+    Description: Hash Key Name
+  HashKeyElementType:
+    Type: String
+    Default: S
+    Description: Hash Key Type
+Resources:
+  DynamoTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref DatabaseName
+      AttributeDefinitions:
+        - 
+          AttributeName: !Ref HashKeyElementName
+          AttributeType: !Ref HashKeyElementType
+      KeySchema:
+        - 
+          AttributeName: !Ref HashKeyElementName
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5 
+Outputs:
+  Table:
+    Description: Table Created using this template.
+    Value: !Ref DatabaseName
