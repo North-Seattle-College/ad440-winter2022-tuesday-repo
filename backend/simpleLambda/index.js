@@ -13,9 +13,10 @@ exports.handler = async (event, context) => {
         // break up sentences
         let feedback = event.feedback;
         let sentenceArray = [];
-        let sentenceObject = {};
+         
         let newSentence = "";
         for (let i = 0; i < feedback.length; i++) {
+            let sentenceObject = {};
             newSentence = newSentence + feedback[i];
             if (feedback[i] == "." || feedback[i] == "?" || feedback[i] == "!") {
                 
@@ -69,4 +70,5 @@ exports.handler = async (event, context) => {
     }
     
     return body;
+
 };
