@@ -11,27 +11,26 @@ exports.handler = async (event) => {
     }
 
     feedback = body.feedback;
-    // var x= feedback.split(".");
-    var sent = [];
-    var buf = "";
+
+    var sentence = [];
+    var storeSentece = "";
     for (var i = 0; i < feedback.length; i++) {
-      buf += feedback[i];
+      storeSentece += feedback[i];
       if (feedback[i] == ".") {
-        sent.push(buf);
-        buf = "";
-        // x[i] += " ";
+        sentence.push(storeSentece);
+        storeSentece = "";
       } else if (feedback[i] == "?") {
-        sent.push(buf);
-        buf = "";
+        sentence.push(storeSentece);
+        storeSentece = "";
       } else if (feedback[i] == "!") {
-        sent.push(buf);
-        buf = "";
+        sentence.push(storeSentece);
+        storeSentece = "";
       }
     }
-    if (buf.length > 0) sent.push(buf);
+    if (storeSentece.length > 0) sentence.push(storeSentece);
   }
 
-  let FeedBack = `${sent}.`;
+  let FeedBack = sentence;
 
   let responseBody = {
     sentence: FeedBack,
